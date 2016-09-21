@@ -4,6 +4,7 @@ package gr.ru.netty;
 import java.io.IOException;
 import java.util.HashMap;
 
+import io.netty.handler.stream.ChunkedWriteHandler;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -65,6 +66,7 @@ public class NettyServer {
 				ChannelPipeline pipeline = ch.pipeline();
 				
 				pipeline.addLast("idleStateHandler", new IdleStateHandler(30,10,0)); // генерирует евенты-тригеры, которые будут перехвачены в хендлере, метод userEventTriggered, каждые указаные ххх секунд. readerIdleTime, writerIdleTime, allIdleTime
+				pipeline.addLast("streamer", new ChunkedWriteHandler());
 				pipeline.addLast("MyEncoder", new PacketEncoder()); // add without name, name auto generated
 				pipeline.addLast("MeDecoder", new PacketDecoder()); // add without name, name auto generated
 
