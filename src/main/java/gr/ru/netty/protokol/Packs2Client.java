@@ -1,9 +1,8 @@
 package gr.ru.netty.protokol;
 
-import java.nio.charset.Charset;
-import java.util.Arrays;
-
 import io.netty.buffer.ByteBuf;
+
+import java.nio.charset.Charset;
 
 public final class Packs2Client {
 
@@ -63,7 +62,7 @@ public final class Packs2Client {
 
 	public static class MsgToUser extends Packet {
 
-		public byte[] foto;
+		//public byte[] foto;
 		public String msg = "";
 		public long unicId;
 		public long from;
@@ -77,12 +76,12 @@ public final class Packs2Client {
 
 		@Override
 		public void readBuf(ByteBuf buffer) {
-			// Фото
-			int fotoLen = buffer.readInt();      // длина массива байт фотографии
-			if (fotoLen > 0){								// если фото есть
-				foto = new byte[fotoLen]; 		             // готовим массив байт
-				buffer.readBytes(foto);                      // читаем байты    	        	
-			}
+//			// Фото
+//			int fotoLen = buffer.readInt();      // длина массива байт фотографии
+//			if (fotoLen > 0){								// если фото есть
+//				foto = new byte[fotoLen]; 		             // готовим массив байт
+//				buffer.readBytes(foto);                      // читаем байты
+//			}
 			// Сообщение
 			int msgLen = buffer.readUnsignedShort();      // длина сообщения
 			if (msgLen>0){									// если сообщение есть
@@ -100,13 +99,13 @@ public final class Packs2Client {
 
 		@Override
 		public void write2Buf(ByteBuf buffer) {
-			// Фото
-			if (foto!=null && foto.length>0){
-				buffer.writeInt(foto.length);
-				buffer.writeBytes(foto);
-			}else{
-				buffer.writeInt(0);
-			}
+//			// Фото
+//			if (foto!=null && foto.length>0){
+//				buffer.writeInt(foto.length);
+//				buffer.writeBytes(foto);
+//			}else{
+//				buffer.writeInt(0);
+//			}
 
 			// Текст
 			byte[] byteArr = msg.getBytes(Charset.forName("UTF-8"));	// Переводим сообщение в массив байт
@@ -122,10 +121,10 @@ public final class Packs2Client {
 
 		@Override
 		public int getLength() {
-			int fotolen = (foto!=null)? foto.length: 0;
+			//int fotolen = (foto!=null)? foto.length: 0;
 			int lenMsg = (msg==null)? 0 : msg.getBytes(Charset.forName("UTF-8")).length;
-			return (Integer.SIZE 
-					+ (Byte.SIZE*fotolen) 
+			return (//Integer.SIZE
+					//+ (Byte.SIZE*fotolen)
 					+ Short.SIZE
 					+ (Byte.SIZE*lenMsg) 
 					+ Long.SIZE 
@@ -137,8 +136,8 @@ public final class Packs2Client {
 
 		@Override
 		public String toString() {
-			int fotolen = (foto!=null)? foto.length: 0;
-			return "MsgToUser [foto=" + fotolen + ", msg=" + msg + ", unicId=" + unicId + ", from=" + from
+			//int fotolen = (foto!=null)? foto.length: 0;
+			return "MsgToUser [msg=" + msg + ", unicId=" + unicId + ", from=" + from
 					+ ", to=" + to + ", time=" + time + ", msgtyp=" + msgtyp + ", getLength()=" + getLength() + ", getId()="
 					+ getId() + "]";
 		}
@@ -146,8 +145,96 @@ public final class Packs2Client {
 
 
 
+    // *************************************
 
-	// *************************************
+    public static class FileToUser extends Packet {
+
+        public byte[] foto;
+        public long unicId; // RowId
+        public long from;
+        public long to;
+        public long time;               // Время когда последний (??? или первый ???) кусочек упал на серер. Может и ваще не надо это.
+        public short pieceId;        // Идентификатор этого кусочка
+        public short piecesCount;    // Общее количество кусочков
+
+        FileToUser(short id) {
+            super(id);
+        }
+
+        @Override
+        public void readBuf(ByteBuf buffer) {
+            // Фото
+            int fotoLen = buffer.readInt();      // длина массива байт фотографии
+            if (fotoLen > 0){								// если фото есть
+                foto = new byte[fotoLen]; 		             // готовим массив байт
+                buffer.readBytes(foto);                      // читаем байты
+            }
+
+
+            this.unicId = buffer.readLong();
+            this.from = buffer.readLong();
+            this.to = buffer.readLong();
+            this.time = buffer.readLong();
+            this.pieceId = buffer.readShort();
+            this.piecesCount = buffer.readShort();
+        }
+
+        @Override
+        public void write2Buf(ByteBuf buffer) {
+            // Фото
+            if (foto!=null && foto.length>0){
+                buffer.writeInt(foto.length);
+                buffer.writeBytes(foto);
+            }else{
+                buffer.writeInt(0);
+            }
+
+            buffer.writeLong(unicId);
+            buffer.writeLong(from);
+            buffer.writeLong(to);
+            buffer.writeLong(time);
+            buffer.writeShort(pieceId);
+            buffer.writeShort(piecesCount);
+        }
+
+        @Override
+        public int getLength() {
+            int fotolen = (foto!=null)? foto.length: 0;
+            return (Integer.SIZE
+                    + (Byte.SIZE*fotolen)
+                    + Long.SIZE
+                    + Long.SIZE
+                    + Long.SIZE
+                    + Long.SIZE
+                    + Short.SIZE
+                    + Short.SIZE)/ Byte.SIZE;
+        }
+
+
+
+        @Override
+        public String toString() {
+            int fotolen = (foto!=null)? foto.length: 0;
+            return "FileToUser{" +
+                    "foto=" + fotolen +
+                    ", unicId=" + unicId +
+                    ", from=" + from +
+                    ", to=" + to +
+                    ", time=" + time +
+                    ", pieceId=" + pieceId +
+                    ", piecesCount=" + piecesCount +
+                    ", getLength()=" + getLength() +
+                    ", getId()=" + getId() +
+                    '}';
+        }
+    }
+
+
+
+
+
+
+    // *************************************
 
 	public static class PointArray extends Packet {
 

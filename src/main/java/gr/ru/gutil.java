@@ -1,9 +1,5 @@
 package gr.ru;
 
-import java.util.UUID;
-
-
-
 /**
  *
  */
@@ -49,6 +45,9 @@ public final class gutil {
     public static final int MSG_ONSERVER     		= 902; // Сохранено на сервере
     public static final int MSG_DELIVERED      		= 904; // ДОставлено получателю
     public static final int MSG_READED      		= 906; // Прочитано получателем
+	public static final int NOTIF_DELIVERED    		= 915;
+
+
     // Типы сообщений
     public static final int MSG_TYP_TXT     		= 920; // текстовое сообщение
     public static final int MSG_TYP_FOTO      		= 922; // фотка	

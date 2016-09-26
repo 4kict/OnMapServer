@@ -21,16 +21,16 @@ public class PacketFactory {
     public static final short MSG_FROM_USER       = 4;  // Исходящее сооббщение от юзера
     public static final short CMD_FROM_USER       = 5;  // Команда от юзера
     public static final short REQ_USER_INFO       = 6;  // Запрос данных от юзера о другом юзере
-
+    public static final short FILE_FROM_USER      = 7;  //
 
     // Сервер -> Клиент
     public static final short MSG_TO_USER           = 50; // Сообщение для юзера
     public static final short MAP_POINT             = 51;    // Точка на карте
     public static final short POINT_ARRAY           = 52;
-    //public static final short MSG_TO_USER          = ;
     public static final short USER_INFO             = 53;
     public static final short SERVER_STAT           = 54;
-    
+    public static final short FILE_TO_USER           = 55; // Сообщение для юзера
+
     public static final short PING		           	= 201;
 
     
@@ -49,6 +49,8 @@ public class PacketFactory {
                 return new Packs2Server.CmdFromUser(id);
             case REQ_USER_INFO :
                 return new ReqUserInfo(id);
+            case FILE_FROM_USER :
+                return new FileFromUser(id);
                 
 
             case MSG_TO_USER :
@@ -61,7 +63,8 @@ public class PacketFactory {
                 return new UserInfo( id );
             case SERVER_STAT :
                 return new ServerStat( id );
-                
+            case FILE_TO_USER :
+                return new FileToUser( id );
                 
             case PING :
                 return new Ping( id );

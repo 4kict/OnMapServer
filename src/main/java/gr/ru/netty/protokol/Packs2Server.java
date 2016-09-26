@@ -1,8 +1,8 @@
 package gr.ru.netty.protokol;
 
-import java.nio.charset.Charset;
-
 import io.netty.buffer.ByteBuf;
+
+import java.nio.charset.Charset;
 
 public final  class Packs2Server {
 
@@ -231,7 +231,7 @@ public final  class Packs2Server {
 
 	public static class MsgFromUser extends Packet  {
 		public int sesion = 0;
-		public byte[] foto;
+		//public byte[] foto;
 		public String msg = "";    
 		public long rowid;
 		public long from;
@@ -245,12 +245,12 @@ public final  class Packs2Server {
 		@Override
 		public void readBuf(ByteBuf buffer) {
 			this.sesion = buffer.readInt();	
-			// Фото
-			int fotoLen = buffer.readInt();      // длина массива байт фотографии
-			if (fotoLen > 0){								// если фото есть
-				foto = new byte[fotoLen]; 		             // готовим массив байт
-				buffer.readBytes(foto);                      // читаем байты    	        	
-			}
+//			// Фото
+//			int fotoLen = buffer.readInt();      // длина массива байт фотографии
+//			if (fotoLen > 0){								// если фото есть
+//				foto = new byte[fotoLen]; 		             // готовим массив байт
+//				buffer.readBytes(foto);                      // читаем байты
+//			}
 			// Сообщение
 			int msgLen = buffer.readUnsignedShort();      // длина сообщения
 			if (msgLen>0){									// если сообщение есть
@@ -268,13 +268,13 @@ public final  class Packs2Server {
 		@Override
 		public void write2Buf(ByteBuf buffer) {
 			buffer.writeInt(sesion);
-			// Фото
-			if (foto!=null && foto.length>0){
-				buffer.writeInt(foto.length);
-				buffer.writeBytes(foto);
-			}else{
-				buffer.writeInt(0);
-			}
+//			// Фото
+//			if (foto!=null && foto.length>0){
+//				buffer.writeInt(foto.length);
+//				buffer.writeBytes(foto);
+//			}else{
+//				buffer.writeInt(0);
+//			}
 
 			// Текст
 			byte[] byteArr = msg.getBytes(Charset.forName("UTF-8"));	// Переводим сообщение в массив байт
@@ -290,11 +290,11 @@ public final  class Packs2Server {
 
 		@Override
 		public int getLength() {
-			int fotolen = (foto!=null)? foto.length: 0;
+			//int fotolen = (foto!=null)? foto.length: 0;
 			int lenMsg = (msg==null)? 0 : msg.getBytes(Charset.forName("UTF-8")).length;			
 			return (Integer.SIZE  
-					+ Integer.SIZE 
-					+ (Byte.SIZE*fotolen) 
+//					+ Integer.SIZE
+//					+ (Byte.SIZE*fotolen)
 					+ Short.SIZE
 					+ (Byte.SIZE*lenMsg) 
 					+ Long.SIZE 
@@ -305,11 +305,98 @@ public final  class Packs2Server {
 
 		@Override
 		public String toString() {
-			int fotolen = (foto!=null)? foto.length: 0;
-			return "MsgFromUser [foto=" + fotolen + ", msg=" + msg + ", rowid=" + rowid + ", from=" + from
+			return "MsgFromUser [msg=" + msg + ", rowid=" + rowid + ", from=" + from
 					+ ", to=" + to + ", msgtyp=" + msgtyp + ", getLength()=" + getLength() + ", getId()=" + getId() + "]";
 		}
 	}
+
+
+
+
+
+	// *************************************
+
+	public static class FileFromUser extends Packet  {
+		public int sesion = 0;
+		public byte[] foto;
+		public long rowid;			// ИД сообщения на стороне автора. Будет одинаковым для всех кусочков одного файла
+		public long from;			// ИД автора
+		public long to;				// ИД получателя
+
+		public short pieceId;		// Идентификатор этого кусочка
+		public short piecesCount;	// Общее количество кусочков
+
+		FileFromUser(short id) {
+			super(id);
+		}
+
+		@Override
+		public void readBuf(ByteBuf buffer) {
+			this.sesion = buffer.readInt();
+			// Фото
+			int fotoLen = buffer.readInt();      // длина массива байт фотографии
+			if (fotoLen > 0){								// если фото есть
+				foto = new byte[fotoLen]; 		             // готовим массив байт
+				buffer.readBytes(foto);                      // читаем байты
+			}
+
+
+			this.rowid = buffer.readLong();
+			this.from = buffer.readLong();
+			this.to = buffer.readLong();
+			this.pieceId = buffer.readShort();
+			this.piecesCount = buffer.readShort();
+		}
+
+		@Override
+		public void write2Buf(ByteBuf buffer) {
+			buffer.writeInt(sesion);
+			// Фото
+			if (foto!=null && foto.length>0){
+				buffer.writeInt(foto.length);
+				buffer.writeBytes(foto);
+			}else{
+				buffer.writeInt(0);
+			}
+
+			buffer.writeLong(rowid);
+			buffer.writeLong(from);
+			buffer.writeLong(to);
+			buffer.writeShort(pieceId);
+			buffer.writeShort(piecesCount);
+		}
+
+		@Override
+		public int getLength() {
+			int fotolen = (foto!=null)? foto.length: 0;
+			return (Integer.SIZE
+					+ Integer.SIZE
+					+ (Byte.SIZE*fotolen)
+					+ Long.SIZE
+					+ Long.SIZE
+					+ Long.SIZE
+					+ Short.SIZE
+					+ Short.SIZE)/ Byte.SIZE;
+		}
+
+
+		@Override
+		public String toString() {
+			int fotolen = (foto!=null)? foto.length: 0;
+			return "FileFromUser{" +
+					"sesion=" + sesion +
+					", foto=" + fotolen +
+					", rowid=" + rowid +
+					", from=" + from +
+					", to=" + to +
+					", pieceId=" + pieceId +
+					", piecesCount=" + piecesCount +
+					", getLength()=" + getLength() +
+					", getId()=" + getId() +
+					'}';
+		}
+	}
+
 
 
 

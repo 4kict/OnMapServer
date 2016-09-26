@@ -1,18 +1,12 @@
 package gr.ru.dao;
 
+import gr.ru.gutil;
+import io.netty.channel.Channel;
+
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.Transient;
-
-import gr.ru.gutil;
-import io.netty.channel.Channel;
 
 
 @Entity
@@ -169,7 +163,16 @@ public class User extends MainEntity{
 				iterator.remove();			// Удаляем 
 			}			
 		}
+	}
 
+	public void removeNotificById(long msgAutorID, long msgRowID) {
+		Iterator<Mesage> iterator = this.unRecivedMsg.iterator();
+		while (iterator.hasNext()) {		// Перебираем все недополоученные сообщения.
+			Mesage msgRMO = iterator.next();
+			if (msgRMO.getAutorId()==msgAutorID && msgRMO.getLocalRowId()==msgRowID ){
+				iterator.remove();			// Удаляем
+			}
+		}
 	}
 
 
