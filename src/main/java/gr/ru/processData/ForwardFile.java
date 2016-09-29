@@ -49,8 +49,12 @@ public class ForwardFile implements HandleTelegramm {
         // Проверяем, все ли кусочки собраны
         File fp = new File(userFolder + "/" + fileFolder + "/");
         System.out.println("filePice saved. Current pices count="+ fp.list().length);
+        // Если в папке собрано нужное количество кусочков, собираем их в один файл
         if ( fp.list().length == fileTelega.piecesCount  ){
-
+            String[] fileNames = fp.list();
+            for (int i=0; i<fileNames.length; i++){
+                System.out.println("fileName["+i+"]="+fileNames[i]);
+            }
         }else if(fp.list().length > fileTelega.piecesCount ){
             System.out.println("ERR!!! Too much pices");
         }
