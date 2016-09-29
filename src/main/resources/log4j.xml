@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration debug="false" xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+    <!-- Вывод на консоль -->
+    <appender name="ConsoleAppender" class="org.apache.log4j.ConsoleAppender">
+        <param name="Encoding" value="Cp866"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ABSOLUTE} [%-5p][%-10.10t][%23.23c] - %m%n" />
+        </layout>
+    </appender>
+
+    <!-- Вывод в файл -->
+    <appender name="fileLog" class="org.apache.log4j.RollingFileAppender">
+        <param name="File" value="application.log"/>
+        <param name="MaxFileSize" value="1MB"/>
+        <param name="MaxBackupIndex" value="10"/>
+        <param name="Encoding" value="UTF-8"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ABSOLUTE} [%-5p][%-10.10t][%23.23c] - %m%n" />
+        </layout>
+    </appender>
+
+
+
+    <logger name="gr.ru" additivity="false">
+        <level value="TRACE"/>
+        <appender-ref ref="ConsoleAppender"/>
+    </logger>
+
+    <root>
+        <priority value="TRACE"  />
+        <appender-ref ref="ConsoleAppender" />
+    </root>
+
+</log4j:configuration>

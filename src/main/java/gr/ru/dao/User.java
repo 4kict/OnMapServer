@@ -165,11 +165,11 @@ public class User extends MainEntity{
 		}
 	}
 
-	public void removeNotificById(long msgAutorID, long msgRowID) {
-		Iterator<Mesage> iterator = this.unRecivedMsg.iterator();
-		while (iterator.hasNext()) {		// Перебираем все недополоученные сообщения.
-			Mesage msgRMO = iterator.next();
-			if (msgRMO.getAutorId()==msgAutorID && msgRMO.getLocalRowId()==msgRowID ){
+	public void removeNotificById(long notifRowID, long notifStatus) {
+		Iterator<Notific> iterator = this.unRecivedNotif.iterator();
+		while (iterator.hasNext()) {		// Перебираем все недополоученные
+			Notific notifORM = iterator.next();
+			if (notifORM.getLocalRowId()==notifRowID && notifORM.getStatus()==notifStatus ){
 				iterator.remove();			// Удаляем
 			}
 		}

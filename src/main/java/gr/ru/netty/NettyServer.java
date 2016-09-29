@@ -1,39 +1,33 @@
 package gr.ru.netty;
 
 
-import java.io.IOException;
-import java.util.HashMap;
-
-import io.netty.handler.stream.ChunkedWriteHandler;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-
 import gr.ru.dao.User;
 import gr.ru.dao.UserDAO;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.ChannelPipeline;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.stream.ChunkedWriteHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.AttributeKey;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.EventExecutorGroup;
+import org.apache.log4j.Logger;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import java.io.IOException;
 
 public class NettyServer {
+	private static final Logger LOG = Logger.getLogger(NettyServer.class);
 	static public final int portTCP = 56888;
 	// Атрибуты которые будут у канала
 	public final static AttributeKey<Integer> SESSION 	= AttributeKey.valueOf("unic_session");
 	public final static AttributeKey<User> USER 		= AttributeKey.valueOf("userdata");
 
 	public static void start() throws IOException, InterruptedException {
-		
+		LOG.info("Start Netty...");
  
 		// SPRING
 		

@@ -1,13 +1,15 @@
 package gr.ru;
 
-import java.io.IOException;
-
 import com.esotericsoftware.kryonet.Server;
-
 import gr.ru.netty.NettyServer;
+import org.apache.log4j.Logger;
+
+import java.io.IOException;
 
 
 public class MyApp {
+	private static final Logger LOG = Logger.getLogger(MyApp.class);
+
 	Server serverKryo;
 	
 	public MyApp( MapServerListener mapServerListener) {
@@ -35,6 +37,7 @@ public class MyApp {
 	
 
 	public static void main(String[] args) {
+		LOG.info("Start OnMapServer");
 		System.out.println("Starting MyHiberSpring2");
 
 
