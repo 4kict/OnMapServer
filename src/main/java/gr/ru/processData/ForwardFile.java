@@ -7,6 +7,10 @@ import gr.ru.netty.protokol.Packet;
 import gr.ru.netty.protokol.Packs2Server.FileFromUser;
 import io.netty.channel.ChannelHandlerContext;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 /**
  * Created by Gri on 26.09.2016.
  */
@@ -24,6 +28,34 @@ public class ForwardFile implements HandleTelegramm {
         }
 
         // Алгоритм обработки кусочка файла
+        //
+        //String fotoPath = "f" + fileTelega.from + "/f_" + fileTelega.rowid + "-" + fileTelega.pieceId + ".jpg";
+        final String userFolder = "user_" + fileTelega.from;    // Папка для файлов юзера
+        final String fileFolder = "f_" + fileTelega.rowid;      // Папка для кусочков конкретного файла
+        final String piceName = "_" + fileTelega.pieceId;       //
+
+        System.out.println("foto.length=" + fileTelega.foto.length + " fotoPath=" + userFolder +"/"+fileFolder+"/"+piceName );
+        // Сохраняем на диск
+        try {
+            FileOutputStream fos = new FileOutputStream(userFolder +"/"+fileFolder+"/"+piceName);
+            fos.write(fileTelega.foto);
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Save file ERR!!!");
+            return;
+        }
+
+        // Проверяем, все ли кусочки собраны
+        File fp = new File(userFolder + "/" + fileFolder + "/");
+        System.out.println("filePice saved. Current pices count="+ fp.list().length);
+        if ( fp.list().length == fileTelega.piecesCount  ){
+
+        }else if(fp.list().length > fileTelega.piecesCount ){
+            System.out.println("ERR!!! Too much pices");
+        }
+
+
 
 
 

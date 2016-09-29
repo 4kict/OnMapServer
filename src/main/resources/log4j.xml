@@ -26,12 +26,12 @@
 
     <logger name="gr.ru" additivity="false">
         <level value="TRACE"/>
-        <appender-ref ref="ConsoleAppender"/>
+        <appender-ref ref="fileLog"/>
     </logger>
 
     <root>
         <priority value="TRACE"  />
-        <appender-ref ref="ConsoleAppender" />
+        <appender-ref ref="fileLog" />
     </root>
 
 </log4j:configuration>
