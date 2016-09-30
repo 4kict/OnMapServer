@@ -10,6 +10,7 @@ public final class gutil {
 	public static final String PARAM_DATA = "ge.griMap.ServiceActivity.data";
 	public static final String BROADCAST_ACTION = "ge.griMap.servicebackbroadcast";
 
+	public static final int SETUP_SIZEOF_PICE 		= 100; // Максимальный размер кусочка файла, в байтах
 
 	// Типы данных которыми могут обмениваться Сервис и Активити
 	public static final int TYPE_FLAG 				= 2; // Тип Флаг

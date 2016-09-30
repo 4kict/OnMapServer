@@ -2,14 +2,16 @@ package gr.ru.processData;
 
 import gr.ru.HashMapDB;
 import gr.ru.dao.MesagaDAO;
+import gr.ru.gutil;
 import gr.ru.netty.NettyServer;
 import gr.ru.netty.protokol.Packet;
 import gr.ru.netty.protokol.Packs2Server.FileFromUser;
 import io.netty.channel.ChannelHandlerContext;
+import org.apache.commons.lang3.ArrayUtils;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by Gri on 26.09.2016.
@@ -30,14 +32,14 @@ public class ForwardFile implements HandleTelegramm {
         // Алгоритм обработки кусочка файла
         //
         //String fotoPath = "f" + fileTelega.from + "/f_" + fileTelega.rowid + "-" + fileTelega.pieceId + ".jpg";
-        final String userFolder = "user_" + fileTelega.from;    // Папка для файлов юзера
+        final String  autorFolder = "user_" + fileTelega.from;    // Папка для файлов юзера
         final String fileFolder = "f_" + fileTelega.rowid;      // Папка для кусочков конкретного файла
         final String piceName = "_" + fileTelega.pieceId;       //
 
-        System.out.println("foto.length=" + fileTelega.foto.length + " fotoPath=" + userFolder +"/"+fileFolder+"/"+piceName );
+        System.out.println("foto.length=" + fileTelega.foto.length + " fotoPath=" +  autorFolder +"/"+fileFolder+"/"+piceName );
         // Сохраняем на диск
         try {
-            FileOutputStream fos = new FileOutputStream(userFolder +"/"+fileFolder+"/"+piceName);
+            FileOutputStream fos = new FileOutputStream( autorFolder +"/"+fileFolder+"/"+piceName);
             fos.write(fileTelega.foto);
             fos.close();
         } catch (IOException e) {
@@ -47,16 +49,56 @@ public class ForwardFile implements HandleTelegramm {
         }
 
         // Проверяем, все ли кусочки собраны
-        File fp = new File(userFolder + "/" + fileFolder + "/");
-        System.out.println("filePice saved. Current pices count="+ fp.list().length);
+        File fp = new File( autorFolder + "/" + fileFolder + "/");
+        System.out.println("filePice saved. Current pices count=" + fp.list().length);
+
+        //TODO: Криво и косо. Байты собираются из буфера, копируются в Лист, потом обратно в массив байт. Надо проверять
+
         // Если в папке собрано нужное количество кусочков, собираем их в один файл
-        if ( fp.list().length == fileTelega.piecesCount  ){
-            String[] fileNames = fp.list();
-            for (int i=0; i<fileNames.length; i++){
-                System.out.println("fileName["+i+"]="+fileNames[i]);
+        if (fp.list().length == fileTelega.piecesCount) {
+            // Создаем масив куда будем писать байты
+            ArrayList<Byte> listBufer = new ArrayList<Byte>(gutil.SETUP_SIZEOF_PICE * fileTelega.piecesCount);
+
+            for (int i = 0; i < fileTelega.piecesCount; i++) {
+                File piceFile = new File( autorFolder + "/" + fileFolder + "/_" + i);
+
+                // Если файл есть, перегоняем его в байты
+                if (piceFile.exists()) {
+                    int size = (int) piceFile.length();
+                    byte[] bytes = new byte[size];
+                    try {
+                        BufferedInputStream buf = new BufferedInputStream(new FileInputStream(piceFile));
+                        buf.read(bytes, 0, bytes.length);
+                        buf.close();
+                        listBufer.addAll(Arrays.asList(  ArrayUtils.toObject(bytes) ));
+
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                        return;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return;
+                    }
+
+                } else{
+                    System.out.println("!!!ERR Pice not found " +  autorFolder + "/" + fileFolder + "/_" + i);
+                }
             }
+
+            // байты всех файлов сложили в listBufer, записываем картинку в файл
+            // Сохраняем файл с именем временной папки
+            try {
+                FileOutputStream fos = new FileOutputStream( autorFolder +"/"+fileFolder+".jpg");
+                fos.write(  ArrayUtils.toPrimitive(listBufer.toArray( new Byte[ listBufer.size()] ))   );
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("Save Pic ERR!!!");
+                return;
+            }
+
         }else if(fp.list().length > fileTelega.piecesCount ){
-            System.out.println("ERR!!! Too much pices");
+            System.out.println("ERR!!! Too much pices in folder "+ autorFolder + "/" + fileFolder + "/");
         }
 
 
