@@ -13,9 +13,10 @@ import gr.ru.netty.protokol.Packs2Client.MsgToUser;
 import gr.ru.netty.protokol.Packs2Client.ServerStat;
 import gr.ru.netty.protokol.Packs2Server.MsgFromUser;
 import io.netty.channel.ChannelHandlerContext;
+import org.apache.log4j.Logger;
 
 public class ForwardedMsg implements HandleTelegramm{
-	
+	private static final Logger LOG = Logger.getLogger(HandleTelegramm.class);
 	private MesagaDAO mesagaDAO;
 	private HashMapDB hashMapDB;
     final int TYPE_PHOTO = 1;
@@ -28,7 +29,7 @@ public class ForwardedMsg implements HandleTelegramm{
 		// Преобразование и проверка что данные верны
 		MsgFromUser msgTelega = validTele (packet) ;		
 		if (msgTelega==null || msgTelega.from!=ctxChanel.channel().attr(NettyServer.USER).get().getId() ){
-			System.out.println("Validation of Mesaga - ERR!!!");
+			LOG.error("Validation of Mesaga - ERR!!!");
 			return;
 		}
 		

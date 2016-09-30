@@ -6,6 +6,7 @@ import gr.ru.dao.User;
 import gr.ru.netty.NettyServer;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
+import org.apache.log4j.Logger;
 
 /**
  * Слушатель отправки нотификейшенов.
@@ -14,6 +15,7 @@ import io.netty.channel.ChannelFutureListener;
  */
 public class SendNotifFutureListener  implements ChannelFutureListener {
 
+    private static final Logger LOG = Logger.getLogger(SendNotifFutureListener.class);
     private NotificDAO notificDAO;
 
     Notific notifORM;
@@ -28,10 +30,10 @@ public class SendNotifFutureListener  implements ChannelFutureListener {
 
     @Override
     public void operationComplete(ChannelFuture future) throws Exception {
-        System.out.println("Notif operationComplete");
+        LOG.info("Notif operationComplete");
         // Если Нотифик удалось отправить и он присестивный, удаляем его из МУСКЛ
         if (future.isSuccess() && notifORM.getId()!=null ){
-            System.out.println("REMOVE Notif");
+            LOG.info("REMOVE Notif");
             User curentUser = future.channel().attr(NettyServer.USER).get();
             curentUser.removeNotif(notifORM);
         }

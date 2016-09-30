@@ -1,16 +1,14 @@
 package gr.ru;
 
-import java.util.HashMap;
-
 import gr.ru.dao.User;
 import io.netty.channel.Channel;
+import org.apache.log4j.Logger;
 
-
-
+import java.util.HashMap;
 
 
 public class HashMapDB {
-
+	private static final Logger LOG = Logger.getLogger(HashMapDB.class);
 	//private HashSet<User> usersHashSet = new HashSet<User>();
 	
 	private HashMap<Long, User> usersHashMap = new HashMap<Long, User>();
@@ -50,8 +48,8 @@ public class HashMapDB {
 		if (uId < 1)
 			return;
 		
-		//System.out.println("usersHashMap.removeUser id="+uId + " result=" + usersHashMap.remove(uId));
-		usersHashMap.remove(uId);		
+		LOG.trace("usersHashMap.removeUser id="+uId + " result=" + usersHashMap.remove(uId));
+		usersHashMap.remove(uId);
 	}
 	
 	public int size(){

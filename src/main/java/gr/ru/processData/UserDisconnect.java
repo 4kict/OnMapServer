@@ -7,9 +7,11 @@ import gr.ru.dao.UserDAO;
 import gr.ru.netty.NettyServer;
 import gr.ru.netty.protokol.Packet;
 import io.netty.channel.ChannelHandlerContext;
+import org.apache.log4j.Logger;
 
 public class UserDisconnect implements HandleTelegramm{
 
+	private static final Logger LOG = Logger.getLogger(UserDisconnect.class);
 	private UserDAO userDao;		// 
 	private HashMapDB hashMapDB;
 
@@ -19,13 +21,10 @@ public class UserDisconnect implements HandleTelegramm{
 
 		if (userToDelete!=null){	
 			userToDelete.setStatus(gutil.STATUS_OFFLINE);
-			
-			System.out.println("userToDelete=" + userToDelete);			
-			System.out.println("userFromDB=" + userDao.getUser(userToDelete.getId()) );		
-			
-			//System.out.println("Before Delete= " + userToDelete);
+
+			LOG.debug("userToDelete=" + userToDelete);
+
 			userDao.saveOrUpdate(userToDelete);							// Если нашли, сохраняем его последние данные в МУСКЛ, предварительно сделав его ОФФЛАЙН
-			//System.out.println("Ufter  Delete= " + userToDelete);
 			hashMapDB.removeUser(userToDelete.getId() );					// Удаляем из Хэша
 		}			
 

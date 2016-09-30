@@ -8,6 +8,7 @@ import gr.ru.netty.protokol.Packet;
 import gr.ru.netty.protokol.Packs2Server.FileFromUser;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import java.util.Arrays;
  * Created by Gri on 26.09.2016.
  */
 public class ForwardFile implements HandleTelegramm {
+    private static final Logger LOG = Logger.getLogger(ForwardFile.class);
     private MesagaDAO mesagaDAO;
     private HashMapDB hashMapDB;
 
@@ -25,7 +27,7 @@ public class ForwardFile implements HandleTelegramm {
         // Преобразование и проверка что данные верны
         FileFromUser fileTelega = validTele (packet) ;
         if (fileTelega==null || fileTelega.from!=ctxChanel.channel().attr(NettyServer.USER).get().getId() ){
-            System.out.println("Validation of Mesaga - ERR!!!");
+            LOG.error("Validation of Mesaga - ERR!!!");
             return;
         }
 
@@ -36,7 +38,7 @@ public class ForwardFile implements HandleTelegramm {
         final String fileFolder = "f_" + fileTelega.rowid;      // Папка для кусочков конкретного файла
         final String piceName = "_" + fileTelega.pieceId;       //
 
-        System.out.println("foto.length=" + fileTelega.foto.length + " fotoPath=" +  autorFolder +"/"+fileFolder+"/"+piceName );
+        LOG.debug("foto.length=" + fileTelega.foto.length + " fotoPath=" +  autorFolder +"/"+fileFolder+"/"+piceName );
         // Сохраняем на диск
         try {
             FileOutputStream fos = new FileOutputStream( autorFolder +"/"+fileFolder+"/"+piceName);
@@ -44,13 +46,13 @@ public class ForwardFile implements HandleTelegramm {
             fos.close();
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Save file ERR!!!");
+            LOG.error("Save file ERR!!!");
             return;
         }
 
         // Проверяем, все ли кусочки собраны
         File fp = new File( autorFolder + "/" + fileFolder + "/");
-        System.out.println("filePice saved. Current pices count=" + fp.list().length);
+        LOG.debug("filePice saved. Current pices count=" + fp.list().length);
 
         //TODO: Криво и косо. Байты собираются из буфера, копируются в Лист, потом обратно в массив байт. Надо проверять
 
@@ -74,14 +76,16 @@ public class ForwardFile implements HandleTelegramm {
 
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
+                        LOG.error("Save Pic ERR!!! FileNotFoundException /n"+e);
                         return;
                     } catch (IOException e) {
                         e.printStackTrace();
+                        LOG.error("Save Pic ERR!!! IOException /n"+e);
                         return;
                     }
 
                 } else{
-                    System.out.println("!!!ERR Pice not found " +  autorFolder + "/" + fileFolder + "/_" + i);
+                    LOG.error("!!!ERR Pice not found " +  autorFolder + "/" + fileFolder + "/_" + i);
                 }
             }
 
@@ -93,12 +97,12 @@ public class ForwardFile implements HandleTelegramm {
                 fos.close();
             } catch (IOException e) {
                 e.printStackTrace();
-                System.out.println("Save Pic ERR!!!");
+                LOG.error("Save Pic ERR!!!/n"+e);
                 return;
             }
 
         }else if(fp.list().length > fileTelega.piecesCount ){
-            System.out.println("ERR!!! Too much pices in folder "+ autorFolder + "/" + fileFolder + "/");
+            LOG.error("ERR!!! Too much pices in folder "+ autorFolder + "/" + fileFolder + "/");
         }
 
 

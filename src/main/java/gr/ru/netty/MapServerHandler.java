@@ -9,6 +9,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.DecoderException;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
+import org.apache.log4j.Logger;
 
 public class MapServerHandler extends SimpleChannelInboundHandler<Packet> {
 
@@ -20,10 +21,9 @@ public class MapServerHandler extends SimpleChannelInboundHandler<Packet> {
     private UserDisconnect userDisconnect;
     private UserCommand userCommand;
     private ForwardFile forwardFile;
-
+    private static final Logger LOG = Logger.getLogger(MapServerHandler.class);
 
     public MapServerHandler() {
-
     }
 
     @Override
@@ -33,40 +33,40 @@ public class MapServerHandler extends SimpleChannelInboundHandler<Packet> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Packet packet) throws Exception {
-        //System.out.println("get Packet id="+ packet.getId() );
+        LOG.debug("get Packet id="+ packet.getId() );
         switch (packet.getId()) {
 
             case PacketFactory.REQUEST_POINT:
-                System.out.println("get REQUEST_POINT " + (RequestPoints) packet);
+                LOG.trace("get REQUEST_POINT " + (RequestPoints) packet);
                 requestList.handle(ctx, packet);
                 break;
             case PacketFactory.REG_DATA:
-                System.out.println("get REG_DATA " + (RegData) packet);
+                LOG.trace("get REG_DATA " + (RegData) packet);
                 regUser.handle(ctx, packet);
 
                 break;
             case PacketFactory.USER_POSITION:
-                System.out.println("get USER_POSITION " + (UserPosition) packet);
+                LOG.trace("get USER_POSITION " + (UserPosition) packet);
                 userPositionProc.handle(ctx, packet);
                 break;
             case PacketFactory.MSG_FROM_USER:
-                System.out.println("get MSG_FROM_USER " + (MsgFromUser) packet);
+                LOG.trace("get MSG_FROM_USER " + (MsgFromUser) packet);
                 forwardedMsg.handle(ctx, packet);
                 break;
             case PacketFactory.CMD_FROM_USER:
-                System.out.println("get CMD_FROM_USER " + (CmdFromUser) packet);
+                LOG.trace("get CMD_FROM_USER " + (CmdFromUser) packet);
                 userCommand.handle(ctx, packet);
                 break;
             case PacketFactory.REQ_USER_INFO:
-                System.out.println("get REQ_USER_INFO " + (ReqUserInfo) packet);
+                LOG.trace("get REQ_USER_INFO " + (ReqUserInfo) packet);
                 requestInfo.handle(ctx, packet);
                 break;
             case PacketFactory.FILE_FROM_USER:
-                System.out.println("get FILE_FROM_USER " + (FileFromUser) packet);
+                LOG.trace("get FILE_FROM_USER " + (FileFromUser) packet);
                 forwardFile.handle(ctx, packet);
                 break;
             case PacketFactory.PING:
-                System.out.println("Ping ");
+                LOG.trace("Ping ");
                 break;
 
             default:
@@ -83,7 +83,7 @@ public class MapServerHandler extends SimpleChannelInboundHandler<Packet> {
         if (evt instanceof IdleStateEvent) {
             IdleStateEvent e = (IdleStateEvent) evt;
             if (e.state() == IdleState.READER_IDLE) {
-                System.out.println("keepAlive Disconnect #" + ctx.channel().id());
+                LOG.info("keepAlive Disconnect #" + ctx.channel().id());
                 ctx.close();        // если не было вхоящего трафика, рубим канал
             } else if (e.state() == IdleState.WRITER_IDLE) {
                 ctx.writeAndFlush(PacketFactory.produce(PacketFactory.PING));    // Если долно не было исходящиго трафика, посылаем Пинг
@@ -94,12 +94,12 @@ public class MapServerHandler extends SimpleChannelInboundHandler<Packet> {
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         userDisconnect.handle(ctx, null);
-        System.out.println("channel Inactive " + ctx.channel().id());
+        LOG.trace("channel Inactive " + ctx.channel().id()+ " addr=" + ctx.channel().remoteAddress());
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("channel Active " + ctx.channel().id());
+        LOG.trace("channel Active id=" + ctx.channel().id() + " addr=" + ctx.channel().remoteAddress());
     }
 
     ;
@@ -107,7 +107,7 @@ public class MapServerHandler extends SimpleChannelInboundHandler<Packet> {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        System.out.println("channel exceptionCaught " + cause);
+        LOG.error("channel exceptionCaught " + cause);
         cause.printStackTrace();
         ctx.close();
     }

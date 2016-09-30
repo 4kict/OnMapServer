@@ -8,18 +8,19 @@ import gr.ru.netty.protokol.PacketFactory;
 import gr.ru.netty.protokol.Packs2Client.UserInfo;
 import gr.ru.netty.protokol.Packs2Server.ReqUserInfo;
 import io.netty.channel.ChannelHandlerContext;
+import org.apache.log4j.Logger;
 
 public class RequestInfo implements HandleTelegramm{
 
+	private static final Logger LOG = Logger.getLogger(RequestInfo.class);
 	private HashMapDB hashMapDB;
 	private UserDAO userDao;
 	
 	@Override
 	public void handle(ChannelHandlerContext ctxChanel, Packet packet) {
-		//System.out.println("handle Requesr Info");
 		ReqUserInfo reqUserInf = validTele (packet);
 		if (reqUserInf==null){
-			System.out.println("Validation of ReqUserInf - ERR");
+			LOG.error("Validation of ReqUserInf - ERR");
 			return;
 		}
 		
@@ -28,10 +29,10 @@ public class RequestInfo implements HandleTelegramm{
 		// А еще когда кликаем по соотв. иконке в списке чатов
 		//System.out.println("Asck Requesr Info in hashMapDB");
 		User user = hashMapDB.getUser(reqUserInf.uid);
-		//System.out.println("User Search 1 ="+user);
+		LOG.trace("User Search in hash ="+user);
 		if (user==null)	{							// Если юзер НЕнашелся в оперативной БД
 			user = userDao.getUser(reqUserInf.uid);	// Ищем в МУСКЛ
-			//System.out.println("User Search 2 ="+user);
+			LOG.trace("User Search in MYSQL ="+user);
 		}
 
 		if (user!=null){								// Только если данные юзера хоть где-то нашлись
@@ -45,9 +46,11 @@ public class RequestInfo implements HandleTelegramm{
 	// TODO: Гугл может не определить локацию, тогда клиент получит НУЛ (так ли?) и андройд выдаст ошибку. 
 			userInfo.country = user.getCountry();
 			userInfo.local = user.getCity();
-			System.out.println("UserInfo to Send ="+userInfo);
+			LOG.trace("UserInfo to Send ="+userInfo);
 			ctxChanel.writeAndFlush(userInfo);
-		}				
+		}else{
+			LOG.warn("can't find user " +  reqUserInf );
+		}
 	}
 
 	@Override

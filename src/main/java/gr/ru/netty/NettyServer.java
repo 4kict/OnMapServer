@@ -34,7 +34,7 @@ public class NettyServer {
 		final ApplicationContext ctx = new ClassPathXmlApplicationContext( "configSpring.xml" );
 		// Ставим всех юзеров в ОФФлайн
 		UserDAO userDao = (UserDAO) ctx.getBean ("userDAO");
-		System.out.println("set to offline users " + userDao.setAllOffline());
+		LOG.info("set to offline users " + userDao.setAllOffline());
 		
 		//MapServerHandler mapServerHandler =  (MapServerHandler)ctx.getBean ("mapServerHandler");
 		
@@ -44,8 +44,7 @@ public class NettyServer {
 		//    slow business logic. e.g database operation
 		// ===========================================================
 		final EventExecutorGroup group = new DefaultEventExecutorGroup(1500); //thread pool of 1500
-		
-		System.out.println("server...");
+
 		NioEventLoopGroup boosGroup = new NioEventLoopGroup();
 		NioEventLoopGroup workerGroup = new NioEventLoopGroup();
 		ServerBootstrap bootstrap = new ServerBootstrap();
@@ -56,7 +55,7 @@ public class NettyServer {
 		bootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
 			@Override
 			protected void initChannel(SocketChannel ch) throws Exception {
-				System.out.println("isTcpNoDelay = "+ch.config().isTcpNoDelay());
+				LOG.info("init new Channel isTcpNoDelay = "+ch.config().isTcpNoDelay() +  " addr=" + ch.remoteAddress());
 				ChannelPipeline pipeline = ch.pipeline();
 				
 				pipeline.addLast("idleStateHandler", new IdleStateHandler(30,10,0)); // генерирует евенты-тригеры, которые будут перехвачены в хендлере, метод userEventTriggered, каждые указаные ххх секунд. readerIdleTime, writerIdleTime, allIdleTime

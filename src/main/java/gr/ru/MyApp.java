@@ -38,10 +38,6 @@ public class MyApp {
 
 	public static void main(String[] args) {
 		LOG.info("Start OnMapServer");
-		System.out.println("Starting MyHiberSpring2");
-
-
-
 
 
 		try {

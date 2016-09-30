@@ -1,12 +1,11 @@
 package gr.ru.dao;
 
-import java.util.List;
-
+import gr.ru.gutil;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import gr.ru.gutil;
+import java.util.List;
 
 
 //@Repository("UserDAO")
@@ -113,10 +112,8 @@ public class UserDAO  {
 
 	@Transactional
 	public void saveOrUpdate(User user) {
-		//System.out.println("Before save User=" + user);
 		user.setLastPresist(System.currentTimeMillis());		
 		sessionFactory.getCurrentSession().saveOrUpdate(user);
-		//System.out.println("Ufter save User=" + user);
 	}
 
 //	@Transactional

@@ -1,18 +1,20 @@
 package gr.ru;
 
+import com.esotericsoftware.jsonbeans.JsonReader;
+import com.esotericsoftware.jsonbeans.JsonValue;
+import gr.ru.dao.User;
+import gr.ru.dao.UserDAO;
+import org.apache.log4j.Logger;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.Charset;
 
-import com.esotericsoftware.jsonbeans.JsonReader;
-import com.esotericsoftware.jsonbeans.JsonValue;
-
-import gr.ru.dao.User;
-import gr.ru.dao.UserDAO;
-
 public class GeoDecoder extends Thread {
+
+	private static final Logger LOG = Logger.getLogger(GeoDecoder.class);
 	long unic_id;
 	double lat, lon;
 	private UserDAO userDao;
@@ -37,7 +39,7 @@ public class GeoDecoder extends Thread {
 	
 
 	public void execute(User user) {
-		//System.out.println("geoCodeer Start USer="+user );
+		LOG.trace("geoCodeer Start USer="+user );
 		this.user = user;
 		this.lat = user.getLat() * 1E-6;
 		this.lon = user.getLon() * 1E-6;
@@ -63,7 +65,7 @@ public class GeoDecoder extends Thread {
 		String coord = lat+","+lon;
 
 		final String url = baseUrl + coord+"&key="+key; 
-		System.out.println(url);
+		LOG.trace(url);
 		try {
 			final InputStream is = new URL(url).openStream();
 			final BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
@@ -76,7 +78,6 @@ public class GeoDecoder extends Thread {
 
 			JsonValue root = new JsonReader().parse(response.toString());
 			JsonValue status=root.get("status");
-			//System.out.println(root);
 
 			if (status.asString().equals("OK")){
 				
@@ -94,7 +95,7 @@ public class GeoDecoder extends Thread {
 				}
 			}
 			else{
-				System.out.println("unknown locality");
+				LOG.error("unknown locality");
 			}
 
 			is.close();
@@ -106,7 +107,7 @@ public class GeoDecoder extends Thread {
 
 		
 
-		//System.out.println("GEOCODER country="+country+" area="+area+" city="+city+" ");
+		LOG.debug("GEOCODER country="+country+" area="+area+" city="+city+" ");
 
 		if 		(area==null && city==null)
 			bestlocality=null;
@@ -120,11 +121,11 @@ public class GeoDecoder extends Thread {
 		}
 
 		
-		//System.out.println( " country="+country + "   bestlocality=" + bestlocality );
+		LOG.info( " country="+country + "   bestlocality=" + bestlocality );
 
 
 		if ( bestlocality!=null  ||  country!=null  ){		
-			System.out.println(bestlocality + " , " + country);
+			LOG.info(bestlocality + " , " + country);
 			user.setCity(bestlocality);
 			user.setCountry(country );
 			user.setLastGeoDecode(System.currentTimeMillis());

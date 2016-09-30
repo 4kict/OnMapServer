@@ -12,8 +12,10 @@ import gr.ru.netty.protokol.PacketFactory;
 import gr.ru.netty.protokol.Packs2Client.ServerStat;
 import gr.ru.netty.protokol.Packs2Server.CmdFromUser;
 import io.netty.channel.ChannelHandlerContext;
+import org.apache.log4j.Logger;
 
 public class UserCommand implements HandleTelegramm{
+	private static final Logger LOG = Logger.getLogger(UserCommand.class);
 	private UserDAO userDao;
 	private NotificDAO notificDAO;
 	private HashMapDB hashMapDB;
@@ -24,35 +26,35 @@ public class UserCommand implements HandleTelegramm{
 
 		CmdFromUser command = validTele(packet);
 		if (command == null) {
-			System.out.println("Validation of Command - ERR");
+			LOG.error("Validation of Command - ERR");
 			return;
 		}
 
 		User currentUser = ctxChanel.channel().attr(NettyServer.USER).get();
 		switch (command.cmd) {
 			case gutil.COMMAND_NEW_CHAT:
-				//System.out.println("COMMAND_NEW_CHAT");
+				LOG.debug("COMMAND_NEW_CHAT");
 				break;
 			case gutil.STATUS_ACTIVE:            // Юзер активен
 				currentUser.setStatus(gutil.STATUS_ACTIVE);
-				System.out.println("STATUS_ACTIVE:");
+				LOG.debug("STATUS_ACTIVE:");
 				userDao.saveOrUpdate(currentUser);
 				break;
 			case gutil.STATUS_PAUSE:            // Юзер в паузе  // НЕ используется
 				currentUser.setStatus(gutil.STATUS_PAUSE);
-				System.out.println("STATUS_PAUSE:");
+				LOG.debug("STATUS_PAUSE:");
 				userDao.saveOrUpdate(currentUser);
 				break;
 			case gutil.STATUS_HIDE:                // Юзер желает скрыться с карты
 				currentUser.setStatus(gutil.STATUS_HIDE);
-				System.out.println("STATUS_HIDE:");
+				LOG.debug("STATUS_HIDE:");
 				userDao.saveOrUpdate(currentUser);
 				break;
 			case gutil.MSG_DELIVERED:
 				/*
 				Сообщени идентифицируется по ИД автора и ИД сообщения в системе автора (т.е. RowId)
 				 */
-				System.out.println("MSG_DELIVERED id=" + command.dat);
+				LOG.debug("MSG_DELIVERED id=" + command.dat);
 				long msgRowID = command.dat;        // Номер доставленного сообщения в системе автора
 				long msgAutorID = command.dat2;        // ИД автора сообщения / получателя нотификейшена
 
@@ -88,7 +90,7 @@ public class UserCommand implements HandleTelegramm{
 				любое уведомление можно идентифицировать по Сообщению (автор + RowId) и Статусу
 				автор - получатель уведомления (он же отправитель этого подтверждения), т.е. ссылка на него есть в текушем канале
 				 */
-				System.out.println("NOTIF_DELIVERED ");
+				LOG.debug("NOTIF_DELIVERED ");
 				long notifRowID = command.dat;        // ИД строки в системе автора сообщения
 				long notifStatus = command.dat2;     // Статус
 
@@ -97,7 +99,7 @@ public class UserCommand implements HandleTelegramm{
 
 				break;
 			default:
-				System.out.println("Command not identyfired =" + command.cmd);
+				LOG.debug("Command not identyfired =" + command.cmd);
 				break;
 		}
 

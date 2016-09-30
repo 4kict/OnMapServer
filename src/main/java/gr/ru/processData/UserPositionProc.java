@@ -7,9 +7,11 @@ import gr.ru.netty.NettyServer;
 import gr.ru.netty.protokol.Packet;
 import gr.ru.netty.protokol.Packs2Server.UserPosition;
 import io.netty.channel.ChannelHandlerContext;
+import org.apache.log4j.Logger;
 
 public class UserPositionProc implements HandleTelegramm {
 
+	private static final Logger LOG = Logger.getLogger(UserPositionProc.class);
 	private UserDAO userDao;
 	
 
@@ -20,7 +22,7 @@ public class UserPositionProc implements HandleTelegramm {
 		UserPosition userPos = validTele (packet) ;
 		User user = ctxChanel.channel().attr(NettyServer.USER).get();
 		if (userPos==null || user==null) {
-			System.out.println("Validation of UserPos - ERR");
+			LOG.error("Validation of UserPos - ERR");
 			return;
 		}
 		
@@ -32,7 +34,7 @@ public class UserPositionProc implements HandleTelegramm {
 
 		// Если юзер давно не сохранялся в МУСЛ, сохраняем
 		if (  user.getLastPresist() < System.currentTimeMillis()-gutil.SETUP_PRESIST_TIMEOUT  ){
-			//System.out.println("PRESIST User: "+user);
+			LOG.trace("PRESIST User: "+user);
 			userDao.saveOrUpdate(user);			
 		}
 

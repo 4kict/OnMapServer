@@ -15,6 +15,7 @@ import gr.ru.netty.protokol.Packs2Client.MsgToUser;
 import gr.ru.netty.protokol.Packs2Client.ServerStat;
 import gr.ru.netty.protokol.Packs2Server.RegData;
 import io.netty.channel.ChannelHandlerContext;
+import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 
 import java.util.Iterator;
@@ -22,7 +23,7 @@ import java.util.Random;
 import java.util.Set;
 
 public class RegUser implements HandleTelegramm {
-
+	private static final Logger LOG = Logger.getLogger(RegUser.class);
 	private UserDAO userDao;
 	private HashMapDB hashMapDB;
 	//private GeoDecoder geoDecoder;
@@ -35,7 +36,7 @@ public class RegUser implements HandleTelegramm {
 		// Преобразование и проверка что данные действительно регистрационные
 		RegData regData = validTele (packet) ;
 		if (regData==null ){
-			System.out.println("Validation of RegData - ERR");
+			LOG.error("Validation of RegData - ERR");
 			return;
 		}
 		
@@ -58,13 +59,13 @@ public class RegUser implements HandleTelegramm {
 		// ********* ПРЕ -РЕГИСТРАЦИЯ ***********
 		// пришили регистрационные данные без координат, при этом юзер не записывается в МУСКЛ, но должне получать все сообщения 	
 		if (regData.lat == 0 && regData.lon == 0 && regData.qad == 0 && ctxChanel.channel().attr(NettyServer.USER).get()==null  &&  ctxChanel.channel().attr(NettyServer.SESSION).get()==null && regData.sesion==0){
-			//System.out.println("PreReg new User "+regData.name);
+			LOG.trace("PreReg new User "+regData.name);
 			if (user!=null){
 				user.setChanel(ctxChanel.channel());					// Сохраняем ссылку на Канал в Юзере
 				ctxChanel.channel().attr(NettyServer.USER).set( user);	// Записываем в Коннект Юзера
 				hashMapDB.add(user); 							// Сохраняем Юзера в Оперативной базе
 			}else{
-				System.out.println("new regData without position, or first connection.");
+				LOG.debug("new regData without position, or first connection.");
 				return;
 			}
 		}
@@ -74,7 +75,7 @@ public class RegUser implements HandleTelegramm {
 		// Если в конекте пока не определен ИД и Сессия, а так же в рег данных нет сессии, значит юзер регается (подключился первый раз)
 		// unic_id может присутствовать в случае обновления рег.данных и реконекта
 		else if (regData.lat!=0 && regData.lon!=0 && regData.qad!=0 && ctxChanel.channel().attr(NettyServer.SESSION).get()==null  && regData.sesion==0) {
-			//System.out.println("Reg new User "+regData.name);
+			LOG.trace("Reg new User "+regData.name);
 			if (user==null){								// Если не нашли
 				user = new User();							// Создем
 				user.setHashkey(hashKey);
@@ -86,10 +87,8 @@ public class RegUser implements HandleTelegramm {
 			}									
 			
 			user.setStatus(gutil.STATUS_ACTIVE);			// Устанавличае что Юзер активен
-			user.setChanel(ctxChanel.channel());						// Сохраняем ссылку на Коннект в Юзере		
-			System.out.println("REGISTRATION: ");
+			user.setChanel(ctxChanel.channel());						// Сохраняем ссылку на Коннект в Юзере
 			userDao.saveOrUpdate(user);						// Сохраняем Юзера в МУСКЛ
-			//System.out.println("Ufter  REGISTRATION= " + user);
 			ctxChanel.channel().attr(NettyServer.SESSION).set(new Random().nextInt() );	 // Устанавливаем Сессию
 			ctxChanel.channel().attr(NettyServer.USER).set(user);				// Записываем в Коннект Уникальный ИД
 			// Оповещаем Юзера			
@@ -109,9 +108,9 @@ public class RegUser implements HandleTelegramm {
 		// Юзер знает правильный свой ИД и сессию.
 		else if (ctxChanel.channel().attr(NettyServer.USER).get()!=null && ctxChanel.channel().attr(NettyServer.USER).get().getId()==regData.u_id 
 				&& ctxChanel.channel().attr(NettyServer.SESSION).get()!=null && ctxChanel.channel().attr(NettyServer.SESSION).get() == regData.sesion ) {
-			//System.out.println("Update new User "+regData.name);
+			LOG.trace("Update new User "+regData.name);
 			if (user==null){								// Если не нашли, все Норм, можно обновлять рег.данные
-				System.out.println("delete user= " + ctxChanel.channel().attr(NettyServer.USER).get());
+				LOG.debug("delete user= " + ctxChanel.channel().attr(NettyServer.USER).get());
 				userDao.delete (ctxChanel.channel().attr(NettyServer.USER).get());	// Удаляем старого юзера из МУСКЛ 
 				hashMapDB.removeUser(ctxChanel.channel().attr(NettyServer.USER).get().getId());	// Удаляем из оперативной БД
 				user = new User();							// Создем
@@ -123,7 +122,6 @@ public class RegUser implements HandleTelegramm {
 				user.setIcon((byte) regData.ico);
 				user.setStatus(gutil.STATUS_ACTIVE);			// Устанавличае что Юзер активен
 				user.setChanel(ctxChanel.channel());					// Сохраняем ссылку на Коннект в Юзере
-				System.out.println("UPDATE:");
 				userDao.saveOrUpdate(user);						// Сохраняем Юзера в МУСКЛ	
 				ctxChanel.channel().attr(NettyServer.SESSION).set(new Random().nextInt() );	 // Устанавливаем Сессию
 				ctxChanel.channel().attr(NettyServer.USER).set(user);				// Записываем в Коннект Уникальный ИД
@@ -136,7 +134,7 @@ public class RegUser implements HandleTelegramm {
 				hashMapDB.add(user); 							// Сохраняем Юзера в Оперативной базе
 
 			}else {
-				System.out.println("User try to delete himself");
+				LOG.warn("User try to delete himself");
 				return;
 			}	
 			
@@ -145,7 +143,7 @@ public class RegUser implements HandleTelegramm {
 
 		// ********* НИ регистрация, НИ обновление -> Выход!
 		else {
-			System.out.println(" ERR!!! Undefined RegData getId=" + ctxChanel.channel().attr(NettyServer.USER).get() + " u_id=" + regData.u_id + " getSession="+ ctxChanel.channel().attr(NettyServer.SESSION).get() + " regData.ses=" + regData.sesion);			
+			LOG.error(" ERR!!! Undefined RegData getId=" + ctxChanel.channel().attr(NettyServer.USER).get() + " u_id=" + regData.u_id + " getSession="+ ctxChanel.channel().attr(NettyServer.SESSION).get() + " regData.ses=" + regData.sesion);
 			return;
 		} 
 		
@@ -154,7 +152,7 @@ public class RegUser implements HandleTelegramm {
 		// Запуск ГЕОКОДЕРА
 		// ***********************
 		// Бин Геокодера должен быть prototype (т.е. каждый вызов - новый бин), по этому тут каждый раз создается новый бин 
-		//System.out.println("GEOCODER "+user.getLastGeoDecode() +" " + user.getCountry() + " " +  regData.lat + " " +regData.lon );
+		LOG.trace("GEOCODER "+user.getLastGeoDecode() +" " + user.getCountry() + " " +  regData.lat + " " +regData.lon );
 		if ( (user.getLastGeoDecode() < (System.currentTimeMillis() - gutil.SETUP_GEODECODE_TIMEOUT) || 
 				user.getCountry()==null || 
 				user.getCity() == null ) && 
@@ -200,7 +198,6 @@ public class RegUser implements HandleTelegramm {
 				ctxChanel.writeAndFlush(serverStat);		// Отправляем оповещение (БЕЗ слушателя)
 
 			}
-			System.out.println("RESEND NOTIF:");
 			userDao.saveOrUpdate(user); 
 		}
 		

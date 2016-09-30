@@ -8,9 +8,11 @@ import gr.ru.netty.protokol.Packs2Client.MapPoint;
 import gr.ru.netty.protokol.Packs2Client.PointArray;
 import gr.ru.netty.protokol.Packs2Server.RequestPoints;
 import io.netty.channel.ChannelHandlerContext;
+import org.apache.log4j.Logger;
 
 public class RequestList implements HandleTelegramm{
 
+	private static final Logger LOG = Logger.getLogger(RequestList.class);
 	private HashMapDB hashMapDB;
 	
 	@Override
@@ -19,7 +21,7 @@ public class RequestList implements HandleTelegramm{
 		// Преобразование и проверка данных
 		RequestPoints rqstTel = validTele (packet) ;
 		if (rqstTel==null){
-			System.out.println("Validation of Rqst - ERR");
+			LOG.error("Validation of Rqst - ERR");
 			return;
 		}
 
@@ -33,9 +35,9 @@ public class RequestList implements HandleTelegramm{
 			pointsArr.points[i].lat 	= users[i].getLat();
 			pointsArr.points[i].lon 	= users[i].getLon();
 			pointsArr.points[i].uid 	= users[i].getId();	
-			//System.out.println("point ="+pointsArr.points[i]);
+			//LOG.trace("point ="+pointsArr.points[i]);
 		}		
-		System.out.println("send PointArray ="+pointsArr.toString());
+		LOG.debug("send PointArray ="+pointsArr.toString());
 		ctxChanel.writeAndFlush(pointsArr);
 		
 	}
