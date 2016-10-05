@@ -6,7 +6,8 @@ import gr.ru.dao.User;
 import gr.ru.netty.NettyServer;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Слушатель отправки нотификейшенов.
@@ -15,7 +16,7 @@ import org.apache.log4j.Logger;
  */
 public class SendNotifFutureListener  implements ChannelFutureListener {
 
-    private static final Logger LOG = Logger.getLogger(SendNotifFutureListener.class);
+    private static final Logger LOG = LogManager.getLogger(SendNotifFutureListener.class);
     private NotificDAO notificDAO;
 
     Notific notifORM;

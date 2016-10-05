@@ -7,11 +7,13 @@ import gr.ru.dao.UserDAO;
 import gr.ru.netty.NettyServer;
 import gr.ru.netty.protokol.Packet;
 import io.netty.channel.ChannelHandlerContext;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 public class UserDisconnect implements HandleTelegramm{
 
-	private static final Logger LOG = Logger.getLogger(UserDisconnect.class);
+	private static final Logger LOG = LogManager.getLogger(UserDisconnect.class);
 	private UserDAO userDao;		// 
 	private HashMapDB hashMapDB;
 

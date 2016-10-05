@@ -2,13 +2,14 @@ package gr.ru;
 
 import gr.ru.dao.User;
 import io.netty.channel.Channel;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 
 
 public class HashMapDB {
-	private static final Logger LOG = Logger.getLogger(HashMapDB.class);
+	private static final Logger LOG = LogManager.getLogger(MyApp.class);
 	//private HashSet<User> usersHashSet = new HashSet<User>();
 	
 	private HashMap<Long, User> usersHashMap = new HashMap<Long, User>();

@@ -7,11 +7,11 @@ import gr.ru.netty.NettyServer;
 import gr.ru.netty.protokol.Packet;
 import gr.ru.netty.protokol.Packs2Server.UserPosition;
 import io.netty.channel.ChannelHandlerContext;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class UserPositionProc implements HandleTelegramm {
-
-	private static final Logger LOG = Logger.getLogger(UserPositionProc.class);
+	private static final Logger LOG = LogManager.getLogger(UserPositionProc.class);
 	private UserDAO userDao;
 	
 

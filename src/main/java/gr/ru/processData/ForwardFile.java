@@ -7,8 +7,10 @@ import gr.ru.netty.NettyServer;
 import gr.ru.netty.protokol.Packet;
 import gr.ru.netty.protokol.Packs2Server.FileFromUser;
 import io.netty.channel.ChannelHandlerContext;
+//import org.apache.commons. lang3.ArrayUtils;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -18,7 +20,7 @@ import java.util.Arrays;
  * Created by Gri on 26.09.2016.
  */
 public class ForwardFile implements HandleTelegramm {
-    private static final Logger LOG = Logger.getLogger(ForwardFile.class);
+    private static final Logger LOG = LogManager.getLogger(ForwardFile.class);
     private MesagaDAO mesagaDAO;
     private HashMapDB hashMapDB;
 
@@ -27,7 +29,7 @@ public class ForwardFile implements HandleTelegramm {
         // Преобразование и проверка что данные верны
         FileFromUser fileTelega = validTele (packet) ;
         if (fileTelega==null || fileTelega.from!=ctxChanel.channel().attr(NettyServer.USER).get().getId() ){
-            LOG.error("Validation of Mesaga - ERR!!!");
+            LOG.error("Validation of file Mesaga - ERR!!!");
             return;
         }
 

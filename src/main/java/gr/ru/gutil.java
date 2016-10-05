@@ -46,6 +46,7 @@ public final class gutil {
     public static final int MSG_ONSERVER     		= 902; // Сохранено на сервере
     public static final int MSG_DELIVERED      		= 904; // ДОставлено получателю
     public static final int MSG_READED      		= 906; // Прочитано получателем
+	public static final int MSG_FILEDEVIDED      	= 908; // Файл разбит на кусочки
 	public static final int NOTIF_DELIVERED    		= 915;
 
 
