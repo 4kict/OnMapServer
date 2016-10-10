@@ -10,7 +10,7 @@ public final class gutil {
 	public static final String PARAM_DATA = "ge.griMap.ServiceActivity.data";
 	public static final String BROADCAST_ACTION = "ge.griMap.servicebackbroadcast";
 
-	public static final int SETUP_SIZEOF_PICE 		= 100; // Максимальный размер кусочка файла, в байтах
+	public static final int SETUP_SIZEOF_PICE 		= 100 * 1024; // Максимальный размер кусочка файла, в байтах
 
 	// Типы данных которыми могут обмениваться Сервис и Активити
 	public static final int TYPE_FLAG 				= 2; // Тип Флаг
@@ -40,19 +40,23 @@ public final class gutil {
     public static final int COMMAND_NEW_CHAT		= 701; //
 
 
-	
+
     // Варианты состояний сообщений
-    public static final int MSG_SENDED      		= 900; //
-    public static final int MSG_ONSERVER     		= 902; // Сохранено на сервере
-    public static final int MSG_DELIVERED      		= 904; // ДОставлено получателю
-    public static final int MSG_READED      		= 906; // Прочитано получателем
-	public static final int MSG_FILEDEVIDED      	= 908; // Файл разбит на кусочки
+    // Тут очень важен порядок, т.к. состояние может меняться только в большую сторону!!!
+    public static final int MSG_FILEDEVIDED      	= 900; // Файл разбит на кусочки
+    public static final int MSG_PICEFILE_ONSERVER 	= 902; // Кусочек файла охранен на сервере
+    public static final int MSG_SENDED      		= 904; // Отправлен
+    public static final int MSG_ONSERVER     		= 906; // Сохранено на сервере
+    public static final int MSG_DELIVERED      		= 908; // ДОставлено получателю
+    public static final int MSG_READED      		= 910; // Прочитано получателем
+
 	public static final int NOTIF_DELIVERED    		= 915;
 
 
     // Типы сообщений
     public static final int MSG_TYP_TXT     		= 920; // текстовое сообщение
-    public static final int MSG_TYP_FOTO      		= 922; // фотка	
+    public static final int MSG_TYP_FOTO      		= 922; // фотка
+    //public static final int MSG_TYP_PREVIEW   		= 924; // превьюха
 	    
 
 	// Флаги которые могут придти от Сервика в Активити
@@ -87,7 +91,7 @@ public final class gutil {
 	public static final int SETUP_REQUEST_TIMEOUT = 2000;
 	public static final long SETUP_GEODECODE_TIMEOUT = 10*60*1000;		// Как часто можно запрашивать реверсивное геокодирование в Гугле для одного пользователя!!!
 	public static final long SETUP_PRESIST_TIMEOUT = 1*20*1000;		// Как часто надо сохранять юзера в МУСКЛ.
-
+	public static final int  SETUP_PREVIEW_SIZE = 400;		// Разрешение превьюшки в пикселях
 
 
 
