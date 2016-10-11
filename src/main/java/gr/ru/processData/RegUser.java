@@ -15,7 +15,8 @@ import gr.ru.netty.protokol.Packs2Client.MsgToUser;
 import gr.ru.netty.protokol.Packs2Client.ServerStat;
 import gr.ru.netty.protokol.Packs2Server.RegData;
 import io.netty.channel.ChannelHandlerContext;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 
 import java.util.Iterator;
@@ -23,7 +24,8 @@ import java.util.Random;
 import java.util.Set;
 
 public class RegUser implements HandleTelegramm {
-	private static final Logger LOG = Logger.getLogger(RegUser.class);
+	private static final Logger LOG = LogManager.getLogger(RegUser.class);
+
 	private UserDAO userDao;
 	private HashMapDB hashMapDB;
 	//private GeoDecoder geoDecoder;

@@ -1,0 +1,33 @@
+Manifest-Version: 1.0
+Class-Path: spring-expression-4.2.5.RELEASE.jar javax.inject-1.jar jax
+ b-core-2.2.7.jar transactions-jdbc-3.9.3.jar atomikos-util-3.9.3.jar 
+ spring-tx-4.2.5.RELEASE.jar spring-context-support-4.2.5.RELEASE.jar 
+ jta-1.1.jar spring-web-4.2.5.RELEASE.jar FastInfoset-1.2.12.jar mysql
+ -connector-java-5.1.6.jar commons-pool2-2.4.2.jar hibernate-entityman
+ ager-4.2.8.Final.jar validation-api-1.1.0.Final.jar jul-to-slf4j-1.7.
+ 7.jar atomikos-1.1.jar commons-logging-1.2.jar container-1.1.jar kryo
+ -2.24.0.jar jpa-1.1.jar spring-beans-4.2.5.RELEASE.jar spring-webmvc-
+ portlet-4.2.5.RELEASE.jar xmlmerge-1.3.jar hibernate-validator-5.1.0.
+ Final.jar jta-1.1.jar spring-aop-4.2.5.RELEASE.jar h2-1.1.jar jboss-t
+ ransaction-api_1.1_spec-1.0.1.Final.jar spring-orm-4.2.5.RELEASE.jar 
+ guice-servlet-3.2.0.jar sisu-guice-3.2.0.jar istack-commons-runtime-2
+ .16.jar javax.el-2.2.4.jar javax.servlet-api-3.1.0.jar commons-compil
+ er-2.6.1.jar spring-core-4.2.5.RELEASE.jar jsonbeans-0.7.jar janino-2
+ .6.1.jar log4j-1.2.16.jar aopalliance-1.0.jar jboss-logging-3.1.0.GA.
+ jar dom4j-1.6.1.jar spring-oxm-4.2.5.RELEASE.jar spring-context-4.2.5
+ .RELEASE.jar jaxb-api-2.2.11.jar logback-classic-1.1.2.jar transactio
+ ns-3.9.3.jar jsr305-2.0.3.jar jcommander-1.35.jar jms-api-1.1-rev-1.j
+ ar h2-1.3.174.jar jsr173_api-1.0.jar config-1.3.jar aspectjrt-1.8.9.j
+ ar logback-core-1.1.2.jar antlr-2.7.7.jar javassist-3.18.1-GA.jar jav
+ ax.el-api-2.2.4.jar kryonet-2.22.0-RC1.jar log4j-over-slf4j-1.7.7.jar
+  spring-webmvc-4.2.5.RELEASE.jar transactions-jta-3.9.3.jar commons-d
+ bcp2-2.1.1.jar reflection-utils-1.1.jar spring-jdbc-4.2.5.RELEASE.jar
+  database-1.1.jar hibernate-jpa-2.0-api-1.0.1.Final.jar aspectjweaver
+ -1.8.8.jar commons-lang3-3.0.jar filtering-1.2.jar transactions-api-3
+ .9.3.jar jaxb-impl-2.2.7.jar classindex-3.2.jar hibernate-1.1.jar obj
+ enesis-2.1.jar guava-16.0.1.jar classmate-1.0.0.jar minlog-1.2.jar ne
+ tty-all-4.1.5.Final.jar hibernate-core-4.2.8.Final.jar transactions-j
+ ms-3.9.3.jar slf4j-api-1.7.7.jar hibernate-commons-annotations-4.0.2.
+ Final.jar
+Main-Class: gr.ru.MyApp
+

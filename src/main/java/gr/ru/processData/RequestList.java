@@ -8,11 +8,12 @@ import gr.ru.netty.protokol.Packs2Client.MapPoint;
 import gr.ru.netty.protokol.Packs2Client.PointArray;
 import gr.ru.netty.protokol.Packs2Server.RequestPoints;
 import io.netty.channel.ChannelHandlerContext;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class RequestList implements HandleTelegramm{
 
-	private static final Logger LOG = Logger.getLogger(RequestList.class);
+	private static final Logger LOG = LogManager.getLogger(RequestList.class);
 	private HashMapDB hashMapDB;
 	
 	@Override

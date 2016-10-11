@@ -4,7 +4,8 @@ import com.esotericsoftware.jsonbeans.JsonReader;
 import com.esotericsoftware.jsonbeans.JsonValue;
 import gr.ru.dao.User;
 import gr.ru.dao.UserDAO;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -14,7 +15,7 @@ import java.nio.charset.Charset;
 
 public class GeoDecoder extends Thread {
 
-	private static final Logger LOG = Logger.getLogger(GeoDecoder.class);
+	private static final Logger LOG = LogManager.getLogger(GeoDecoder.class);
 	long unic_id;
 	double lat, lon;
 	private UserDAO userDao;

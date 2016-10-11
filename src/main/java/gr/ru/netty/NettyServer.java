@@ -13,14 +13,15 @@ import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.AttributeKey;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.EventExecutorGroup;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.IOException;
 
 public class NettyServer {
-	private static final Logger LOG = Logger.getLogger(NettyServer.class);
+	private static final Logger LOG = LogManager.getLogger(NettyServer.class);
 	static public final int portTCP = 56888;
 	// Атрибуты которые будут у канала
 	public final static AttributeKey<Integer> SESSION 	= AttributeKey.valueOf("unic_session");

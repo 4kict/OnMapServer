@@ -12,10 +12,11 @@ import gr.ru.netty.protokol.PacketFactory;
 import gr.ru.netty.protokol.Packs2Client.ServerStat;
 import gr.ru.netty.protokol.Packs2Server.CmdFromUser;
 import io.netty.channel.ChannelHandlerContext;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class UserCommand implements HandleTelegramm{
-	private static final Logger LOG = Logger.getLogger(UserCommand.class);
+	private static final Logger LOG = LogManager.getLogger(UserCommand.class);
 	private UserDAO userDao;
 	private NotificDAO notificDAO;
 	private HashMapDB hashMapDB;

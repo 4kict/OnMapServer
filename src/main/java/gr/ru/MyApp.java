@@ -2,13 +2,17 @@ package gr.ru;
 
 import com.esotericsoftware.kryonet.Server;
 import gr.ru.netty.NettyServer;
-import org.apache.log4j.Logger;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 import java.io.IOException;
 
 
 public class MyApp {
-	private static final Logger LOG = Logger.getLogger(MyApp.class);
+	//private static final Logger LOG = Logger.getLogger(MyApp.class);
+	private static final Logger LOG = LogManager.getLogger(MyApp.class);
 
 	Server serverKryo;
 	

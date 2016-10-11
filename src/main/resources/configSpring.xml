@@ -61,12 +61,14 @@
 
     <bean id="mapServerHandler" class="gr.ru.netty.MapServerHandler" scope="prototype">
         <property name="forwardedMsg" ref="forwardedMsg"></property>
+
         <property name="requestInfo" ref="requestInfo"></property>
         <property name="requestList" ref="requestList"></property>
         <property name="userPositionProc" ref="userPositionProc"></property>
         <property name="regUser" ref="regUser"></property>
         <property name="userDisconnect" ref="userDisconnect"></property>
         <property name="userCommand" ref="userCommand"></property>
+        <property name="forwardFile" ref="forwardFile"/>
     </bean>
 
     <bean id="regUser" class="gr.ru.processData.RegUser">

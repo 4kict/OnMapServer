@@ -13,10 +13,12 @@ import gr.ru.netty.protokol.Packs2Client.MsgToUser;
 import gr.ru.netty.protokol.Packs2Client.ServerStat;
 import gr.ru.netty.protokol.Packs2Server.MsgFromUser;
 import io.netty.channel.ChannelHandlerContext;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ForwardedMsg implements HandleTelegramm{
-	private static final Logger LOG = Logger.getLogger(HandleTelegramm.class);
+	private static final Logger LOG = LogManager.getLogger(ForwardedMsg.class);
+
 	private MesagaDAO mesagaDAO;
 	private HashMapDB hashMapDB;
     final int TYPE_PHOTO = 1;
