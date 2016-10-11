@@ -5,11 +5,16 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import gr.ru.gutil;
 import gr.ru.netty.protokol.Packs2Client.MsgToUser;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.*;
 
 @Entity
 public class Mesage extends MainEntity{
- 
+	private static final Logger LOG = LogManager.getLogger(Mesage.class);
 	private static final long serialVersionUID = 3685918131344654578L;
 	
 	@Column
@@ -89,11 +94,40 @@ public class Mesage extends MainEntity{
 
 	public MsgToUser fillNettyPack (MsgToUser msgToUser){
 		msgToUser.from = this.autorId;
-		msgToUser.msg = this.mesaga;
+
 		msgToUser.msgtyp = this.msgType;
 		msgToUser.time = this.time;
 		msgToUser.to = this.userRecipient.getId();
 		msgToUser.unicId = this.localRowId;
+		// если это превьюха, надо взять ее из файла и положить в сообщение
+		if (this.msgType == gutil.MSG_TYP_FOTO){
+			msgToUser.msg = "";
+			File file = new File( this.mesaga );      // В тексте сообщени содержится путь к файлу
+			if (file.exists()) {
+				// Читаем файл в массив байт
+				int size = (int) file.length();
+				byte[] bytes = new byte[size];
+				try {
+					BufferedInputStream buf = new BufferedInputStream(new FileInputStream(file));
+					buf.read(bytes, 0, bytes.length);
+					buf.close();
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+					LOG.error("Preview FileNotFoundException " + this.mesaga );
+				} catch (IOException e) {
+					e.printStackTrace();
+					LOG.error("Preview IOException " + this.mesaga );
+				}
+				msgToUser.foto = bytes;
+
+			}else {
+				LOG.error("No preview in " + this.mesaga );
+			}
+
+		}else {
+			msgToUser.msg = this.mesaga;
+		}
+
 		return msgToUser;
 	}
 	

@@ -29,12 +29,12 @@ public class PacketDecoder extends ByteToMessageDecoder {
 
         final short id = in.readUnsignedByte();				// Читаем ИД класса
         final int dataLength = in.readInt();		// Читаем размер объекта
-        LOG.trace("PacketDecoder: id="+ id + " len="+ dataLength);
+
         if (in.readableBytes() < dataLength) {     // Смотрим, можно ли прочитать всю необходимую длинну
             in.resetReaderIndex();
             return;
         }
-        
+        LOG.trace("PacketDecoder: id="+ id + " len="+ dataLength);
         // Декодируем объект
         Packet decodedPaket = PacketFactory.produceFromBuf(id, in.readSlice(dataLength));
 

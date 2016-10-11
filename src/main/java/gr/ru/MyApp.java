@@ -1,6 +1,5 @@
 package gr.ru;
 
-import com.esotericsoftware.kryonet.Server;
 import gr.ru.netty.NettyServer;
 
 import org.apache.logging.log4j.LogManager;
@@ -14,7 +13,6 @@ public class MyApp {
 	//private static final Logger LOG = Logger.getLogger(MyApp.class);
 	private static final Logger LOG = LogManager.getLogger(MyApp.class);
 
-	Server serverKryo;
 	
 	public MyApp( MapServerListener mapServerListener) {
 //
@@ -42,6 +40,12 @@ public class MyApp {
 
 	public static void main(String[] args) {
 		LOG.info("Start OnMapServer");
+		LOG.trace("trace");
+        LOG.debug("debug");
+        LOG.info("info");
+        LOG.warn("warn");
+        LOG.error("error");
+        LOG.fatal("fatal");
 
 
 		try {

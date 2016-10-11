@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="debug">
+
+
+    <!--TRACE-->
+    <!--DEBUG-->
+    <!--INFO-->
+    <!--WARN-->
+    <!--ERROR-->
+    <!--FATAL-->
+    <!--OFF-->
+
+
     <!-- Секция аппендеров -->
     <Appenders>
 
@@ -8,7 +19,20 @@
         </Console>
 
         <!-- Файловый аппендер -->
-        <RollingFile  name="file" fileName="log.log"  filePattern="log-%d{MM-dd-yyyy}-%i.log" >
+        <RollingFile  name="rootfile" fileName="logs/rootlog.log"  filePattern="logs/rootlog-%d{MM-dd-yyyy}-%i.log" >
+            <PatternLayout>
+                <Pattern>%d{ABSOLUTE} [%-5p][%-15.15t][%23.23c] - %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="1 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+
+        <!-- Файловый аппендер -->
+        <!-- Файловый аппендер -->
+        <RollingFile  name="file" fileName="logs/log.log"  filePattern="logs/log-%d{MM-dd-yyyy}-%i.log" >
             <PatternLayout>
                 <Pattern>%d{ABSOLUTE} [%-5p][%-15.15t][%23.23c] - %m%n</Pattern>
             </PatternLayout>
@@ -26,13 +50,16 @@
     <Loggers>
         <!-- Корневой логгер -->
         <Root level="TRACE">
-            <AppenderRef ref="file"/>
+            <AppenderRef ref="rootfile"/>
         </Root>
 
         <!-- Логгер нашего класса  -->
         <!--<Logger name="gr.ru" level="info" additivity="false">-->
-        <Logger name="gr.ru" level="TRACE"  >
+        <Logger name="gr.ru" >
             <AppenderRef ref="Console" level="INFO"/>
+        </Logger>
+        <Logger name="gr.ru" >
+            <AppenderRef ref="file" level="TRACE"/>
         </Logger>
     </Loggers>
 </Configuration>

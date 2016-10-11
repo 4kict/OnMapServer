@@ -81,7 +81,7 @@ public class NettyServer {
 		            if (!channelFuture.isSuccess()) {
 		            	System.out.println("new connection UNSuccess " + channelFuture.channel().id());
 		            }else {
-		            	System.out.println("new connection isSuccess "+ channelFuture.channel().id());
+		            	System.out.println("new connection isSuccess "+ channelFuture.channel().remoteAddress());
 		            }
 					
 				}});
