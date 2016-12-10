@@ -39,7 +39,6 @@ public class MyApp {
 	
 
 	public static void main(String[] args) {
-		LOG.info("Start OnMapServer");
 		LOG.trace("trace");
         LOG.debug("debug");
         LOG.info("info");
