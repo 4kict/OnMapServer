@@ -102,7 +102,7 @@ public class GeoDecoder extends Thread {
 			is.close();
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			LOG.error("google GeoDecoder error: \n" + e);
 			e.printStackTrace();
 		}  
 

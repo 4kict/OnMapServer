@@ -1,20 +1,18 @@
 package gr.ru;
 
 import gr.ru.netty.NettyServer;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 
 import java.io.IOException;
 
 
 public class MyApp {
-	//private static final Logger LOG = Logger.getLogger(MyApp.class);
-	private static final Logger LOG = LogManager.getLogger(MyApp.class);
+    //private static final Logger LOG = Logger.getLogger(MyApp.class);
+    private static final Logger LOG = LogManager.getLogger(MyApp.class);
 
-	
-	public MyApp( MapServerListener mapServerListener) {
+
+    public MyApp(MapServerListener mapServerListener) {
 //
 //		serverKryo = new Server() {
 //			protected Connection newConnection () {
@@ -33,13 +31,12 @@ public class MyApp {
 //		serverKryo.start();										// �������� ������
 //		
 //		System.out.println("Server is open..."  );
-		
-	}
-	
-	
 
-	public static void main(String[] args) {
-		LOG.trace("trace");
+    }
+
+
+    public static void main(String[] args) {
+        LOG.trace("trace");
         LOG.debug("debug");
         LOG.info("info");
         LOG.warn("warn");
@@ -47,15 +44,17 @@ public class MyApp {
         LOG.fatal("fatal");
 
 
-		try {
-			//new NettyServer();
-			NettyServer.start();
-		} catch (IOException | InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		};
-		
-		
+        try {
+            //new NettyServer();
+            NettyServer.start();
+        } catch (IOException | InterruptedException e) {
+            // TODO Auto-generated catch block
+            LOG.error("Cant Starn Netty \n" + e);
+            e.printStackTrace();
+        }
+        ;
+
+
 //		new MyApp (mapServerListener);		
 //		mapServerListener.received(fakeMapConnection, regDat );
 //		
@@ -68,16 +67,15 @@ public class MyApp {
 //		System.out.println("Start disconnected");
 //		
 //		mapServerListener.disconnected(fakeMapConnection);
-		
-		//mapServerListener.received(fakeMapConnection2, regDat2 );
+
+        //mapServerListener.received(fakeMapConnection2, regDat2 );
 
 //		UserDAO userDao =  (UserDAO)ctx.getBean ("userDAO");
 //		User user = userDao.regUser(regDat);Id());
-		
-		
-	}
 
 
-	
+    }
+
+
 }
 

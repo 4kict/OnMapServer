@@ -36,8 +36,8 @@ public class ForwardFile implements HandleTelegramm {
     @Override
     public void handle(ChannelHandlerContext ctxChanel, Packet packet) {
         // Преобразование и проверка что данные верны
-        FileFromUser fileTelega = validTele (packet) ;
-        if (fileTelega==null || fileTelega.from!=ctxChanel.channel().attr(NettyServer.USER).get().getId() ){
+        FileFromUser fileTelega = validTele(packet);
+        if (fileTelega == null || fileTelega.from != ctxChanel.channel().attr(NettyServer.USER).get().getId()) {
             LOG.error("Validation of file Mesaga - ERR!!!");
             return;
         }
@@ -45,21 +45,21 @@ public class ForwardFile implements HandleTelegramm {
         // Алгоритм обработки кусочка файла
 
         // 1. Сохраняем пришедший кусочек на диск
-        final String  autorFolder = "user_" + fileTelega.from;    // Папка для файлов юзера
+        final String autorFolder = "user_" + fileTelega.from;    // Папка для файлов юзера
         final String fileFolder = "f_" + fileTelega.rowid;      // Папка для кусочков конкретного файла
         final String piceName = "_" + fileTelega.pieceId;       //
         //LOG.debug("getfile: " + fileTelega.toString());
-        LOG.debug("foto.length=" + fileTelega.foto.length + " fotoPath=" +  autorFolder +"/"+fileFolder+"/"+piceName );
+        LOG.debug("foto.length=" + fileTelega.foto.length + " fotoPath=" + autorFolder + "/" + fileFolder + "/" + piceName);
         // Сохраняем на диск
-        File filePice = new File("fotos/"+ autorFolder +"/"+fileFolder+"/"+piceName);
+        File filePice = new File("fotos/" + autorFolder + "/" + fileFolder + "/" + piceName);
         filePice.getParentFile().mkdirs();
         try {
-            FileOutputStream fos = new FileOutputStream( filePice);
+            FileOutputStream fos = new FileOutputStream(filePice);
             fos.write(fileTelega.foto);
             fos.close();
         } catch (IOException e) {
             e.printStackTrace();
-            LOG.error("Save file ERR!!!");
+            LOG.error("Save file ERR!!! \n" + e);
             return;
         }
 
@@ -71,11 +71,8 @@ public class ForwardFile implements HandleTelegramm {
         ctxChanel.writeAndFlush(serverStat);
 
 
-
-
-
         // Проверяем, все ли кусочки собраны
-        File fp = new File( "fotos/"+  autorFolder + "/" + fileFolder + "/");
+        File fp = new File("fotos/" + autorFolder + "/" + fileFolder + "/");
         LOG.debug("filePice saved. Current pices count=" + fp.list().length);
 
         //TODO: Криво и косо. Байты собираются из буфера, копируются в Лист, потом обратно в массив байт. Надо проверять
@@ -86,7 +83,7 @@ public class ForwardFile implements HandleTelegramm {
             ArrayList<Byte> listBufer = new ArrayList<>(gutil.SETUP_SIZEOF_PICE * fileTelega.piecesCount);
 
             for (int i = 0; i < fileTelega.piecesCount; i++) {
-                File piceFile = new File("fotos/"+  autorFolder + "/" + fileFolder + "/_" + i);
+                File piceFile = new File("fotos/" + autorFolder + "/" + fileFolder + "/_" + i);
 
                 // Если файл есть, перегоняем его в байты
                 if (piceFile.exists()) {
@@ -96,34 +93,34 @@ public class ForwardFile implements HandleTelegramm {
                         BufferedInputStream buf = new BufferedInputStream(new FileInputStream(piceFile));
                         buf.read(bytes, 0, bytes.length);
                         buf.close();
-                        listBufer.addAll(Arrays.asList(  ArrayUtils.toObject(bytes) ));
+                        listBufer.addAll(Arrays.asList(ArrayUtils.toObject(bytes)));
 
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
-                        LOG.error("Save Pic ERR!!! FileNotFoundException /n"+e);
+                        LOG.error("Save Pic ERR!!! FileNotFoundException \n" + e);
                         return;
                     } catch (IOException e) {
                         e.printStackTrace();
-                        LOG.error("Save Pic ERR!!! IOException /n"+e);
+                        LOG.error("Save Pic ERR!!! IOException \n" + e);
                         return;
                     }
 
-                } else{
-                    LOG.error("!!!ERR Pice not found " + "fotos/"+  autorFolder + "/" + fileFolder + "/_" + i);
+                } else {
+                    LOG.error("!!!ERR Pice not found " + "fotos/" + autorFolder + "/" + fileFolder + "/_" + i);
                 }
             }
 
             // байты всех файлов сложили в listBufer, записываем картинку в файл
             // Сохраняем файл с именем временной папки
-            File fileJpg = new File("fotos/"+ autorFolder +"/"+fileFolder+".jpg");
+            File fileJpg = new File("fotos/" + autorFolder + "/" + fileFolder + ".jpg");
             fileJpg.getParentFile().mkdirs();
             try {
-                FileOutputStream fos = new FileOutputStream( fileJpg);
-                fos.write(  ArrayUtils.toPrimitive(listBufer.toArray( new Byte[ listBufer.size()] ))   );
+                FileOutputStream fos = new FileOutputStream(fileJpg);
+                fos.write(ArrayUtils.toPrimitive(listBufer.toArray(new Byte[listBufer.size()])));
                 fos.close();
             } catch (IOException e) {
                 e.printStackTrace();
-                LOG.error("Save Pic ERR!!!/n"+e);
+                LOG.error("Save Pic ERR!!! \n" + e);
                 return;
             }
 
@@ -154,14 +151,14 @@ public class ForwardFile implements HandleTelegramm {
             /*
             В этот момент очевидно что файл целиком принят и сохранен. Оповещаем автора. Делаем сообщение для получателя
              */
-            LOG.info("new file collected and saved on server " + "fotos/"+ autorFolder +"/"+fileFolder+".jpg");
+            LOG.info("new file collected and saved on server " + "fotos/" + autorFolder + "/" + fileFolder + ".jpg");
 
             // Создаем оповещение для автора
             Notific notifORM = new Notific();
-            notifORM.setLocalRowId( fileTelega.rowid );
-            notifORM.setTime(System.currentTimeMillis());					// Любой нотификейшн хранит время появления сообщения на сервере (надо для автора собщения)
-            notifORM.setUserRecipient( ctxChanel.channel().attr(NettyServer.USER).get() );
-            notifORM.setStatus(gutil.MSG_ONSERVER);							// ставим статус оповещению НА СЕРВЕРЕ
+            notifORM.setLocalRowId(fileTelega.rowid);
+            notifORM.setTime(System.currentTimeMillis());                    // Любой нотификейшн хранит время появления сообщения на сервере (надо для автора собщения)
+            notifORM.setUserRecipient(ctxChanel.channel().attr(NettyServer.USER).get());
+            notifORM.setStatus(gutil.MSG_ONSERVER);                            // ставим статус оповещению НА СЕРВЕРЕ
             // Сохраняем в Юзере (в авторе)
             ctxChanel.channel().attr(NettyServer.USER).get().getUnRecivedNotif().add(notifORM);
             // Перегоняем оповещение в нужный формат и отправляем автору сообщения
@@ -173,7 +170,7 @@ public class ForwardFile implements HandleTelegramm {
             msgORM.setAutorId(fileTelega.from);
 
             msgORM.setLocalRowId(fileTelega.rowid);
-            msgORM.setMesaga("" + fileJpg.getPath() );
+            msgORM.setMesaga("" + fileJpg.getPath());
             msgORM.setMsgType((short) gutil.MSG_TYP_FOTO);
             msgORM.setTime(notifORM.getTime());
             // Поиск Юзера получателя сообщение
@@ -181,25 +178,21 @@ public class ForwardFile implements HandleTelegramm {
             msgORM.setUserRecipient(recipientUser);
 
             //Получатель найден и вроде бы в сети
-            if ( recipientUser!=null && recipientUser.getMapChanel()!=null && recipientUser.getMapChanel().isActive() ){
-                recipientUser.getUnRecivedMsg().add( msgORM );		// Сохраняем сообщение в получателе
+            if (recipientUser != null && recipientUser.getMapChanel() != null && recipientUser.getMapChanel().isActive()) {
+                recipientUser.getUnRecivedMsg().add(msgORM);        // Сохраняем сообщение в получателе
                 // Создаем и тут же заполняем новый пакет
-                Packs2Client.MsgToUser msgNetty = msgORM.fillNettyPack( (Packs2Client.MsgToUser) PacketFactory.produce(PacketFactory.MSG_TO_USER) );
-                recipientUser.getMapChanel().writeAndFlush(msgNetty);		// Отправляем сообщение (БЕЗ слушателя)
+                Packs2Client.MsgToUser msgNetty = msgORM.fillNettyPack((Packs2Client.MsgToUser) PacketFactory.produce(PacketFactory.MSG_TO_USER));
+                recipientUser.getMapChanel().writeAndFlush(msgNetty);        // Отправляем сообщение (БЕЗ слушателя)
             }
             // Получатель НЕ в сети
-            else{
-                mesagaDAO.saveMesaga( msgORM, fileTelega.to  );					// сохраняем сообщение на сервере
+            else {
+                mesagaDAO.saveMesaga(msgORM, fileTelega.to);                    // сохраняем сообщение на сервере
             }
 
 
-
-        }else if(fp.list().length > fileTelega.piecesCount ){
-            LOG.error("ERR!!! Too much pices in folder "+ "fotos/"+  autorFolder + "/" + fileFolder + "/");
+        } else if (fp.list().length > fileTelega.piecesCount) {
+            LOG.error("ERR!!! Too much pices in folder " + "fotos/" + autorFolder + "/" + fileFolder + "/");
         }
-
-
-
 
 
 //        // Если пришел файл, надо его сохранить, а имя файла записать в текст сообщения
@@ -227,11 +220,7 @@ public class ForwardFile implements HandleTelegramm {
 //        }
 
 
-
-
     }
-
-
 
 
     @Override
@@ -242,15 +231,11 @@ public class ForwardFile implements HandleTelegramm {
                 msgTelega.piecesCount == 0 || //msgTelega.pieceId == 0 ||
                 msgTelega.foto == null || msgTelega.foto.length == 0) {
             return null;
-        }
-        else{
+        } else {
             return msgTelega;
         }
 
     }
-
-
-
 
 
     public MesagaDAO getMesagaDAO() {

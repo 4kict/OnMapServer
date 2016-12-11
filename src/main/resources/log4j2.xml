@@ -19,17 +19,17 @@
             <PatternLayout pattern="%d{ABSOLUTE} [%-5p][%-15.15t][%23.23c] - %m%n"/>
         </Console>
 
-        <!--&lt;!&ndash; Файловый аппендер &ndash;&gt;-->
-        <!--<RollingFile  name="rootfile" fileName="logs/rootlog.log"  filePattern="logs/rootlog-%d{MM-dd-yyyy}-%i.log" >-->
-            <!--<PatternLayout>-->
-                <!--<Pattern>%d{ABSOLUTE} [%-5p][%-15.15t][%23.23c] - %m%n</Pattern>-->
-            <!--</PatternLayout>-->
-            <!--<Policies>-->
-                <!--<TimeBasedTriggeringPolicy />-->
-                <!--<SizeBasedTriggeringPolicy size="1 MB"/>-->
-            <!--</Policies>-->
-            <!--<DefaultRolloverStrategy max="10"/>-->
-        <!--</RollingFile>-->
+        <!-- Файловый аппендер -->
+        <RollingFile  name="rootfile" fileName="logs/rootlog.log"  filePattern="logs/rootlog-%d{MM-dd-yyyy}-%i.log" >
+            <PatternLayout>
+                <Pattern>%d{ABSOLUTE} [%-5p][%-15.15t][%23.23c] - %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="1 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
 
         <!-- Файловый аппендер -->
         <RollingFile  name="file" fileName="logs/log.log"  filePattern="logs/log-%d{MM-dd-yyyy}-%i.log" >
@@ -49,9 +49,9 @@
     <!-- Секция логгеров -->
     <Loggers>
         <!-- Корневой логгер -->
-        <!--<Root level="TRACE">-->
-            <!--<AppenderRef ref="rootfile"/>-->
-        <!--</Root>-->
+        <Root level="INFO" >
+            <AppenderRef ref="rootfile"/>
+        </Root>
 
         <!-- Логгер нашего класса  -->
         <!--<Logger name="gr.ru" level="info" additivity="false">-->

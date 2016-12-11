@@ -113,10 +113,10 @@ public class Mesage extends MainEntity{
 					buf.close();
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
-					LOG.error("Preview FileNotFoundException " + this.mesaga );
+					LOG.error("Preview FileNotFoundException " + this.mesaga + "\n" + e );
 				} catch (IOException e) {
 					e.printStackTrace();
-					LOG.error("Preview IOException " + this.mesaga );
+					LOG.error("Preview IOException " + this.mesaga + "\n" + e  );
 				}
 				msgToUser.foto = bytes;
 
