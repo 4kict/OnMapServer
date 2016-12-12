@@ -10,20 +10,18 @@ import gr.ru.netty.NettyServer;
 import gr.ru.netty.protokol.Packet;
 import gr.ru.netty.protokol.PacketFactory;
 import gr.ru.netty.protokol.Packs2Client;
-import gr.ru.netty.protokol.Packs2Server.FileFromUser;
 import gr.ru.netty.protokol.Packs2Client.ServerStat;
+import gr.ru.netty.protokol.Packs2Server.FileFromUser;
 import io.netty.channel.ChannelHandlerContext;
-//import org.apache.commons. lang3.ArrayUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.imgscalr.Scalr;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+//import org.apache.commons. lang3.ArrayUtils;
 
 /**
  * Created by Gri on 26.09.2016.

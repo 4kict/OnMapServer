@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/xml/doc-files/log4j.dtd">
+<log4j:configuration>
+
+    <!--TRACE-->
+    <!--DEBUG-->
+    <!--INFO-->
+    <!--WARN-->
+    <!--ERROR-->
+    <!--FATAL-->
+    <!--OFF-->
+
+    <!-- Вывод на консоль -->
+    <appender name="ConsoleAppender" class="org.apache.log4j.ConsoleAppender">
+        <param name="Encoding" value="Cp866"/>
+        <param name="Threshold" value="INFO"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ABSOLUTE} [%-5p][%-15.15t][%23.23c] - %m%n"/>
+        </layout>
+    </appender>
+
+    <!-- Вывод в файл -->
+    <appender name="FileTrace" class="org.apache.log4j.RollingFileAppender">
+        <param name="File" value="onmapserver.log"/>
+        <param name="MaxFileSize" value="1MB"/>
+        <param name="MaxBackupIndex" value="10"/>
+        <param name="Encoding" value="UTF-8"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ABSOLUTE} [%-5p][%-15.15t][%23.23c] - %m%n"/>
+        </layout>
+    </appender>
+
+    <!-- Вывод в файл -->
+    <appender name="FileWork" class="org.apache.log4j.RollingFileAppender">
+        <param name="File" value="debuger.log"/>
+        <param name="MaxFileSize" value="1MB"/>
+        <param name="MaxBackupIndex" value="10"/>
+        <param name="Encoding" value="UTF-8"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ABSOLUTE} [%-5p][%-15.15t][%23.23c] - %m%n"/>
+        </layout>
+    </appender>
+
+
+    <!--<logger name="gr.ru" additivity="false">-->
+    <logger name="gr.ru">
+        <level value="TRACE"/>
+        <appender-ref ref="FileWork"/>
+        <appender-ref ref="ConsoleAppender"/>
+    </logger>
+
+    <root>
+        <priority value="DEBUG"/>
+        <appender-ref ref="FileTrace"/>
+    </root>
+
+</log4j:configuration>

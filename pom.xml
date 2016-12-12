@@ -8,8 +8,6 @@
     <version>1.0</version>
 
 
-
-
     <properties>
         <mainClass>org.atteo.moonshine.Main</mainClass>
         <!-- Shared version number properties -->
@@ -17,18 +15,17 @@
     </properties>
 
 
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.atteo.moonshine</groupId>
-                <artifactId>bom</artifactId>
-                <version>1.1</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+    <!--<dependencyManagement>-->
+        <!--<dependencies>-->
+            <!--<dependency>-->
+                <!--<groupId>org.atteo.moonshine</groupId>-->
+                <!--<artifactId>bom</artifactId>-->
+                <!--<version>1.1</version>-->
+                <!--<type>pom</type>-->
+                <!--<scope>import</scope>-->
+            <!--</dependency>-->
+        <!--</dependencies>-->
+    <!--</dependencyManagement>-->
 
     <dependencies>
 
@@ -46,18 +43,24 @@
             <version>3.0</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.imgscalr/imgscalr-lib -->
         <dependency>
-            <groupId>org.imgscalr</groupId>
-            <artifactId>imgscalr-lib</artifactId>
-            <version>4.2</version>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-dbcp2</artifactId>
+            <version>2.1.1</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.imgscalr/imgscalr-lib -->
+        <!--<dependency>-->
+            <!--<groupId>org.imgscalr</groupId>-->
+            <!--<artifactId>imgscalr-lib</artifactId>-->
+            <!--<version>4.2</version>-->
+        <!--</dependency>-->
 
 
         <!--<dependency>-->
-            <!--<groupId>log4j</groupId>-->
-            <!--<artifactId>log4j</artifactId>-->
-            <!--<version>1.2.16</version>-->
+        <!--<groupId>log4j</groupId>-->
+        <!--<artifactId>log4j</artifactId>-->
+        <!--<version>1.2.16</version>-->
         <!--</dependency>-->
 
         <dependency>
@@ -70,8 +73,6 @@
             <artifactId>log4j-api</artifactId>
             <version>2.6.2</version>
         </dependency>
-
-
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-slf4j-impl</artifactId>
@@ -105,15 +106,6 @@
             <artifactId>gson</artifactId>
             <version>2.8.0</version>
         </dependency>
-
-
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-dbcp2</artifactId>
-            <version>2.1.1</version>
-        </dependency>
-
 
         <dependency>
             <groupId>mysql</groupId>
@@ -253,28 +245,26 @@
         </dependency>
 
 
-
-
         <!--<dependency>-->
-            <!--<groupId>org.atteo.moonshine</groupId>-->
-            <!--<artifactId>container</artifactId>-->
+        <!--<groupId>org.atteo.moonshine</groupId>-->
+        <!--<artifactId>container</artifactId>-->
         <!--</dependency>-->
         <!--<dependency>-->
-            <!--<groupId>org.atteo.moonshine</groupId>-->
-            <!--<artifactId>hibernate</artifactId>-->
+        <!--<groupId>org.atteo.moonshine</groupId>-->
+        <!--<artifactId>hibernate</artifactId>-->
         <!--</dependency>-->
         <!--<dependency>-->
-            <!--<groupId>org.atteo.moonshine</groupId>-->
-            <!--<artifactId>h2</artifactId>-->
+        <!--<groupId>org.atteo.moonshine</groupId>-->
+        <!--<artifactId>h2</artifactId>-->
         <!--</dependency>-->
         <!--<dependency>-->
-            <!--<groupId>org.atteo.moonshine</groupId>-->
-            <!--<artifactId>atomikos</artifactId>-->
+        <!--<groupId>org.atteo.moonshine</groupId>-->
+        <!--<artifactId>atomikos</artifactId>-->
         <!--</dependency>-->
         <!--<dependency>-->
-            <!--<groupId>org.atteo.moonshine</groupId>-->
-            <!--<artifactId>container-test-utils</artifactId>-->
-            <!--<scope>test</scope>-->
+        <!--<groupId>org.atteo.moonshine</groupId>-->
+        <!--<artifactId>container-test-utils</artifactId>-->
+        <!--<scope>test</scope>-->
         <!--</dependency>-->
         <dependency>
             <groupId>org.assertj</groupId>
@@ -303,6 +293,27 @@
                 </configuration>
             </plugin>
 
+            <!--Копируем зависимости-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>false</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -321,9 +332,9 @@
                         <configuration>
                             <!--<mainClass>${mainClass}</mainClass>-->
                             <!--<arguments>-->
-                                <!--<argument>&#45;&#45;auto-configuration</argument>-->
-                                <!--<argument>&#45;&#45;home</argument>-->
-                                <!--<argument>${project.build.directory}/home</argument>-->
+                            <!--<argument>&#45;&#45;auto-configuration</argument>-->
+                            <!--<argument>&#45;&#45;home</argument>-->
+                            <!--<argument>${project.build.directory}/home</argument>-->
                             <!--</arguments>-->
                         </configuration>
                     </execution>
