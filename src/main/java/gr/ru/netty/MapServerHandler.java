@@ -34,7 +34,7 @@ public class MapServerHandler extends SimpleChannelInboundHandler<Packet> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Packet packet) throws Exception {
-        LOG.debug("get Packet id="+ packet.getId() );
+        //LOG.debug("get Packet id="+ packet.getId() );
         switch (packet.getId()) {
 
             case PacketFactory.REQUEST_POINT:
@@ -67,10 +67,11 @@ public class MapServerHandler extends SimpleChannelInboundHandler<Packet> {
                 forwardFile.handle(ctx, packet);
                 break;
             case PacketFactory.PING:
-                LOG.trace("Ping ");
+                //LOG.trace("Ping ");
                 break;
 
             default:
+                LOG.error("Unknown packet ID=" + packet.getId());
                 throw new DecoderException("channelRead unrekognized paket ID # " + packet.getId());
 
         }

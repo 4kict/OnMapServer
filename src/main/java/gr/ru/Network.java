@@ -2,8 +2,8 @@
 package gr.ru;
 
 
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryonet.EndPoint;
+//import com.esotericsoftware.kryo.Kryo;
+//import com.esotericsoftware.kryonet.EndPoint;
 
 //This class is a convenient place to keep things common to both the client and server.
 public class Network {

@@ -1,21 +1,22 @@
 package gr.ru;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Random;
+//import java.util.ArrayList;
+//import java.util.HashSet;
+//import java.util.Iterator;
+//import java.util.Random;
+//
+//import com.esotericsoftware.kryonet.Connection;
+//import com.esotericsoftware.kryonet.FrameworkMessage;
+//
+//import gr.ru.Network.*;
+//
+//import gr.ru.dao.Mesage;
+//import gr.ru.dao.Notific;
+//import gr.ru.dao.User;
 
-import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.FrameworkMessage;
+public class MapConnection  {
+/*public class MapConnection extends Connection {
 
-import gr.ru.Network.*;
-
-import gr.ru.dao.Mesage;
-import gr.ru.dao.Notific;
-import gr.ru.dao.User;
-
-public class MapConnection extends Connection {
-	/*
 
 	//private Long unicId = 0L;
 	private int session = 0;

@@ -104,7 +104,7 @@
 
     </bean>
     <bean id="hashMapDB" class="gr.ru.HashMapDB"></bean>
-    <bean id="geoDecoder" class="gr.ru.GeoDecoder" scope="prototype">
+    <bean id="geoDecoder" class="gr.ru.geocoder.GeoDecoder" scope="prototype">
         <property name="userDao" ref="userDAO"></property>
 
     </bean>

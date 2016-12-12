@@ -1,10 +1,11 @@
 package gr.ru;
 
-import com.esotericsoftware.kryonet.Listener;
+///import com.esotericsoftware.kryonet.Listener;
 
 //@Component	//	обьявляем этот класс компонентом Спринга
-public class MapServerListener extends Listener {
-/*
+public class MapServerListener{
+/*public class MapServerListener extends Listener {
+
 	private ForwardedMsg forwardedMsg;
 	private UserPosition userPosition;
 	private RegUser regUser;

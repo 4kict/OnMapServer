@@ -1,7 +1,7 @@
 package gr.ru.processData;
 
 import gr.ru.ApplicationContextUtils;
-import gr.ru.GeoDecoder;
+import gr.ru.geocoder.GeoDecoder;
 import gr.ru.HashMapDB;
 import gr.ru.dao.Mesage;
 import gr.ru.dao.Notific;
