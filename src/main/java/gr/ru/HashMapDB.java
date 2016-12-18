@@ -31,16 +31,7 @@ public class HashMapDB {
 
 
 
-	public User[]  getListOfUsers() {	
-//		ArrayList<User> values = new ArrayList<User>();
-//		int i = 0;
-//		Iterator<User> itr = usersHashSet.iterator();
-//		while (itr.hasNext()) {
-//			User nextUser = itr.next();
-//			if (!nextUser.isCluster()){
-//				values.add(nextUser)	;					
-//			}
-//		}		
+	public User[]  getListOfUsers() {
 		return usersHashMap.values().toArray(new User[usersHashMap.size()]);	
 	}
 

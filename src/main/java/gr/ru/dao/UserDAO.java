@@ -137,6 +137,7 @@ public class UserDAO  {
 
 	@Transactional
 	public void delete(User userToDelete) {
+	    // TODO Обязательно сначала удалить все недополученные сообщения и нотификейшены
 		sessionFactory.getCurrentSession().delete(userToDelete);
 	}
 	

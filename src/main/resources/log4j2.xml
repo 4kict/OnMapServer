@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--<Configuration status="debug">-->
-<Configuration>
+<Configuration status="debug">
 
 
     <!--TRACE-->
@@ -49,7 +49,7 @@
     <!-- Секция логгеров -->
     <Loggers>
         <!-- Корневой логгер -->
-        <Root level="INFO" >
+        <Root level="TRACE">
             <AppenderRef ref="rootfile"/>
         </Root>
 
@@ -58,8 +58,8 @@
         <!--<Logger name="gr.ru" >-->
             <!--<AppenderRef ref="Console" level="INFO"/>-->
         <!--</Logger>-->
-        <Logger name="gr.ru" level="TRACE" additivity="false">
-            <AppenderRef ref="file" />
-        </Logger>
+        <!--<Logger name="gr.ru" level="TRACE"  additivity="false">-->
+            <!--<AppenderRef ref="file" />-->
+        <!--</Logger>-->
     </Loggers>
 </Configuration>
