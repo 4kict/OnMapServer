@@ -11,41 +11,39 @@ import org.springframework.transaction.annotation.Transactional;
  */
 
 public class MesagaDAO {
-	private SessionFactory sessionFactory;
+    private SessionFactory sessionFactory;
 
-	public MesagaDAO() {
-		// TODO Auto-generated constructor stub
-	}
+    public MesagaDAO() {
+        // TODO Auto-generated constructor stub
+    }
 
-	public MesagaDAO(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
+    public MesagaDAO(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 
-	
-	
 
-	@Transactional
-	public void saveMesaga(Mesage msgORM, long to) {
-		User recipient = (User) sessionFactory.getCurrentSession().get(User.class, to);
-		if (recipient!=null){
-			msgORM.setUserRecipient(recipient);
-			saveMesaga(msgORM);
-		}
-	}
-	
-	
-	@Transactional
-	public void saveMesaga(Mesage msgORM) {
-		msgORM.setTime(System.currentTimeMillis());
-		sessionFactory.getCurrentSession().saveOrUpdate(msgORM);
-	}
-	
-	@Transactional
-	public void delete(Mesage msgORM) {
-		sessionFactory.getCurrentSession().delete(msgORM);
-	}
-	
-	
+    @Transactional
+    public void saveMesaga(Mesage msgORM, long to) {
+        User recipient = (User) sessionFactory.getCurrentSession().get(User.class, to);
+        if (recipient != null) {
+            msgORM.setUserRecipient(recipient);
+            saveMesaga(msgORM);
+        }
+    }
+
+
+    @Transactional
+    public void saveMesaga(Mesage msgORM) {
+        msgORM.setTime(System.currentTimeMillis());
+        sessionFactory.getCurrentSession().saveOrUpdate(msgORM);
+    }
+
+    @Transactional
+    public void delete(Mesage msgORM) {
+        sessionFactory.getCurrentSession().delete(msgORM);
+    }
+
+
 //	@Transactional
 //	public void saveMesaga111(MsgFromClient msg  ){
 //		User recipient = (User) sessionFactory.getCurrentSession().get(User.class, msg.to);
@@ -81,21 +79,21 @@ public class MesagaDAO {
 //	}
 
 
-	//	@Transactional
-	//    public List<Mesage> getMsgToRecipient (User recipient){
-	//    	
-	//		String hql = "from User where hashkey=" + hashKey;
-	//		Query query = sessionFactory.getCurrentSession().createQuery(hql);
-	//
-	//		@SuppressWarnings("unchecked")
-	//		List<User> listUser = (List<User>) query.list();
-	//
-	//		if (listUser != null && !listUser.isEmpty()) {
-	//			return listUser.get(0);
-	//		}
-	//		
-	//    	return null;
-	//    }
+    //	@Transactional
+    //    public List<Mesage> getMsgToRecipient (User recipient){
+    //
+    //		String hql = "from User where hashkey=" + hashKey;
+    //		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+    //
+    //		@SuppressWarnings("unchecked")
+    //		List<User> listUser = (List<User>) query.list();
+    //
+    //		if (listUser != null && !listUser.isEmpty()) {
+    //			return listUser.get(0);
+    //		}
+    //
+    //    	return null;
+    //    }
 
 
 //	@Transactional
@@ -115,26 +113,19 @@ public class MesagaDAO {
 //	
 
 
+    /**
+     * @return the sessionFactory
+     */
+    public SessionFactory getSessionFactory() {
+        return sessionFactory;
+    }
 
-
-	/**
-	 * @return the sessionFactory
-	 */
-	public SessionFactory getSessionFactory() {
-		return sessionFactory;
-	}
-
-	/**
-	 * @param sessionFactory the sessionFactory to set
-	 */
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
-
-
-
-
-
+    /**
+     * @param sessionFactory the sessionFactory to set
+     */
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 
 
 }

@@ -1,8 +1,8 @@
 package gr.ru.processData;
 
-import gr.ru.gutil;
 import gr.ru.dao.User;
 import gr.ru.dao.UserDAO;
+import gr.ru.gutil;
 import gr.ru.netty.NettyServer;
 import gr.ru.netty.protokol.Packet;
 import gr.ru.netty.protokol.Packs2Server.UserPosition;
@@ -11,57 +11,55 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class UserPositionProc implements HandleTelegramm {
-	private static final Logger LOG = LogManager.getLogger(UserPositionProc.class);
-	private UserDAO userDao;
-	
-
-	@Override
-	public void handle(ChannelHandlerContext ctxChanel, Packet packet) {
-		//System.out.println("UserPositionProc handle");
-		// Преобразование и проверка 
-		UserPosition userPos = validTele (packet) ;
-		User user = ctxChanel.channel().attr(NettyServer.USER).get();
-		if (userPos==null || user==null) {
-			LOG.error("Validation of UserPos - ERR");
-			return;
-		}
-		
-		//System.out.println("UserPositionProc validTele - OK");
-		
-		user.setLat(userPos.lat);
-		user.setLon(userPos.lon);
-		user.setQad(userPos.qad);
-
-		// Если юзер давно не сохранялся в МУСЛ, сохраняем
-		if (  user.getLastPresist() < System.currentTimeMillis()-gutil.SETUP_PRESIST_TIMEOUT  ){
-			LOG.trace("PRESIST User: "+user);
-			userDao.saveOrUpdate(user);			
-		}
+    private static final Logger LOG = LogManager.getLogger(UserPositionProc.class);
+    private UserDAO userDao;
 
 
-	}
+    @Override
+    public void handle(ChannelHandlerContext ctxChanel, Packet packet) {
+        //System.out.println("UserPositionProc handle");
+        // Преобразование и проверка
+        UserPosition userPos = validTele(packet);
+        User user = ctxChanel.channel().attr(NettyServer.USER).get();
+        if (userPos == null || user == null) {
+            LOG.error("Validation of UserPos - ERR");
+            return;
+        }
 
-	@Override
-	public UserPosition validTele(Packet packet) {
+        //System.out.println("UserPositionProc validTele - OK");
 
-		UserPosition userPos = (UserPosition) packet;
-		if (userPos.lat==0 || userPos.lon==0 || userPos.qad==0 ){
-			return null;
-		}else{
-			return userPos;
-		}
-		
-	}
+        user.setLat(userPos.lat);
+        user.setLon(userPos.lon);
+        user.setQad(userPos.qad);
 
-	public UserDAO getUserDao() {
-		return userDao;
-	}
+        // Если юзер давно не сохранялся в МУСЛ, сохраняем
+        if (user.getLastPresist() < System.currentTimeMillis() - gutil.SETUP_PRESIST_TIMEOUT) {
+            LOG.trace("PRESIST User: " + user);
+            userDao.saveOrUpdate(user);
+        }
 
-	public void setUserDao(UserDAO userDao) {
-		this.userDao = userDao;
-	}
-	
-	
-	
+
+    }
+
+    @Override
+    public UserPosition validTele(Packet packet) {
+
+        UserPosition userPos = (UserPosition) packet;
+        if (userPos.lat == 0 || userPos.lon == 0 || userPos.qad == 0) {
+            return null;
+        } else {
+            return userPos;
+        }
+
+    }
+
+    public UserDAO getUserDao() {
+        return userDao;
+    }
+
+    public void setUserDao(UserDAO userDao) {
+        this.userDao = userDao;
+    }
+
 
 }

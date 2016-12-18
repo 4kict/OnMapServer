@@ -16,10 +16,10 @@ public class PacketEncoder extends MessageToByteEncoder<Packet> {
 
     @Override
     protected void encode(ChannelHandlerContext ctx, Packet packet, ByteBuf out) throws Exception {
-    	//LOG.trace("encode id=" + packet.getId() + " len=" + packet.getLength()  );
+        //LOG.trace("encode id=" + packet.getId() + " len=" + packet.getLength()  );
         // Пишем в выходной буфер
         out.writeByte(packet.getId());          // ИДентификатор объекта
-        out.writeInt(packet.getLength() );    // Длину данных
+        out.writeInt(packet.getLength());    // Длину данных
         packet.write2Buf(out);                  // Тело объекта
 
     }

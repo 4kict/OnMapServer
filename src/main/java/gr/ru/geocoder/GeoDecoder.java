@@ -72,7 +72,6 @@ public class GeoDecoder extends Thread {
             rd.close();
 
 
-
         } catch (Exception e) {
             LOG.error("google GeoDecoder error: \n" + e);
             e.printStackTrace();
@@ -101,8 +100,6 @@ public class GeoDecoder extends Thread {
         }
 
 
-
-
 //        if (area.equals("") && city.equals(""))
 //            bestlocality = "";
 //        else if (area.equals("") && !city.equals(""))
@@ -119,7 +116,6 @@ public class GeoDecoder extends Thread {
             city = area;
         if (city.equals(""))
             city = area2;
-
 
 
         if (!city.equals("") && !country.equals("")) {

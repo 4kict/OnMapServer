@@ -15,141 +15,132 @@ import io.netty.channel.ChannelHandlerContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class UserCommand implements HandleTelegramm{
-	private static final Logger LOG = LogManager.getLogger(UserCommand.class);
-	private UserDAO userDao;
-	private NotificDAO notificDAO;
-	private HashMapDB hashMapDB;
+public class UserCommand implements HandleTelegramm {
+    private static final Logger LOG = LogManager.getLogger(UserCommand.class);
+    private UserDAO userDao;
+    private NotificDAO notificDAO;
+    private HashMapDB hashMapDB;
 
 
-	@Override
-	public void handle(ChannelHandlerContext ctxChanel, Packet packet) {
+    @Override
+    public void handle(ChannelHandlerContext ctxChanel, Packet packet) {
 
-		CmdFromUser command = validTele(packet);
-		if (command == null) {
-			LOG.error("Validation of Command - ERR");
-			return;
-		}
+        CmdFromUser command = validTele(packet);
+        if (command == null) {
+            LOG.error("Validation of Command - ERR");
+            return;
+        }
 
-		User currentUser = ctxChanel.channel().attr(NettyServer.USER).get();
-		switch (command.cmd) {
-			case gutil.COMMAND_NEW_CHAT:
-				LOG.debug("COMMAND_NEW_CHAT");
-				break;
-			case gutil.STATUS_ACTIVE:            // Юзер активен
-				currentUser.setStatus(gutil.STATUS_ACTIVE);
-				LOG.debug("STATUS_ACTIVE:");
-				userDao.saveOrUpdate(currentUser);
-				break;
-			case gutil.STATUS_PAUSE:            // Юзер в паузе  // НЕ используется
-				currentUser.setStatus(gutil.STATUS_PAUSE);
-				LOG.debug("STATUS_PAUSE:");
-				userDao.saveOrUpdate(currentUser);
-				break;
-			case gutil.STATUS_HIDE:                // Юзер желает скрыться с карты
-				currentUser.setStatus(gutil.STATUS_HIDE);
-				LOG.debug("STATUS_HIDE:");
-				userDao.saveOrUpdate(currentUser);
-				break;
-			case gutil.MSG_DELIVERED:
-				/*
+        User currentUser = ctxChanel.channel().attr(NettyServer.USER).get();
+        switch (command.cmd) {
+            case gutil.COMMAND_NEW_CHAT:
+                LOG.debug("COMMAND_NEW_CHAT");
+                break;
+            case gutil.STATUS_ACTIVE:            // Юзер активен
+                currentUser.setStatus(gutil.STATUS_ACTIVE);
+                LOG.debug("STATUS_ACTIVE:");
+                userDao.saveOrUpdate(currentUser);
+                break;
+            case gutil.STATUS_PAUSE:            // Юзер в паузе  // НЕ используется
+                currentUser.setStatus(gutil.STATUS_PAUSE);
+                LOG.debug("STATUS_PAUSE:");
+                userDao.saveOrUpdate(currentUser);
+                break;
+            case gutil.STATUS_HIDE:                // Юзер желает скрыться с карты
+                currentUser.setStatus(gutil.STATUS_HIDE);
+                LOG.debug("STATUS_HIDE:");
+                userDao.saveOrUpdate(currentUser);
+                break;
+            case gutil.MSG_DELIVERED:
+                /*
 				Сообщени идентифицируется по ИД автора и ИД сообщения в системе автора (т.е. RowId)
 				 */
-				LOG.debug("MSG_DELIVERED id=" + command.dat);
-				long msgRowID = command.dat;        // Номер доставленного сообщения в системе автора
-				long msgAutorID = command.dat2;        // ИД автора сообщения / получателя нотификейшена
+                LOG.debug("MSG_DELIVERED id=" + command.dat);
+                long msgRowID = command.dat;        // Номер доставленного сообщения в системе автора
+                long msgAutorID = command.dat2;        // ИД автора сообщения / получателя нотификейшена
 
-				// Удалить сообщение из списка недоставленных
-				User user = ctxChanel.channel().attr(NettyServer.USER).get();
-				user.removeMesagaById(msgAutorID, msgRowID);
+                // Удалить сообщение из списка недоставленных
+                User user = ctxChanel.channel().attr(NettyServer.USER).get();
+                user.removeMesagaById(msgAutorID, msgRowID);
 
-				// Отправить или сохранить Нотификейшн автору
-				// Поиск Юзера получателя Нотификейшена - автора сообщения
-				User recipientUser = hashMapDB.getUser(msgAutorID);        // Возможно НУЛЛ
-				// Создаем оповещение
-				Notific notifORM = new Notific();
-				notifORM.setLocalRowId(msgRowID);
-				notifORM.setTime(System.currentTimeMillis());                    // походу не нужно оно тут
-				notifORM.setUserRecipient(recipientUser);
-				notifORM.setStatus(gutil.MSG_DELIVERED);                        // ставим статус оповещению НА СЕРВЕРЕ
+                // Отправить или сохранить Нотификейшн автору
+                // Поиск Юзера получателя Нотификейшена - автора сообщения
+                User recipientUser = hashMapDB.getUser(msgAutorID);        // Возможно НУЛЛ
+                // Создаем оповещение
+                Notific notifORM = new Notific();
+                notifORM.setLocalRowId(msgRowID);
+                notifORM.setTime(System.currentTimeMillis());                    // походу не нужно оно тут
+                notifORM.setUserRecipient(recipientUser);
+                notifORM.setStatus(gutil.MSG_DELIVERED);                        // ставим статус оповещению НА СЕРВЕРЕ
 
-				if (recipientUser != null && recipientUser.getMapChanel() != null && recipientUser.getMapChanel().isActive()) {
-					// Сохраняем в Юзере
-					recipientUser.getMapChanel().attr(NettyServer.USER).get().getUnRecivedNotif().add(notifORM);
-					// Перегоняем оповещение в нужный формат и отправляем автору сообщения
-					ServerStat serverStat = notifORM.fillNettyPack((ServerStat) PacketFactory.produce(PacketFactory.SERVER_STAT));
-					recipientUser.getMapChanel().writeAndFlush(serverStat);        // Отправляем оповещение (БЕЗ слушателя)
-				}
-				// Автор сообещния не в сети
-				else {
-					notificDAO.saveNotific(notifORM, msgAutorID);
-				}
-				break;
+                if (recipientUser != null && recipientUser.getMapChanel() != null && recipientUser.getMapChanel().isActive()) {
+                    // Сохраняем в Юзере
+                    recipientUser.getMapChanel().attr(NettyServer.USER).get().getUnRecivedNotif().add(notifORM);
+                    // Перегоняем оповещение в нужный формат и отправляем автору сообщения
+                    ServerStat serverStat = notifORM.fillNettyPack((ServerStat) PacketFactory.produce(PacketFactory.SERVER_STAT));
+                    recipientUser.getMapChanel().writeAndFlush(serverStat);        // Отправляем оповещение (БЕЗ слушателя)
+                }
+                // Автор сообещния не в сети
+                else {
+                    notificDAO.saveNotific(notifORM, msgAutorID);
+                }
+                break;
 
-			case gutil.NOTIF_DELIVERED:		//
+            case gutil.NOTIF_DELIVERED:        //
 				/*
 				любое уведомление можно идентифицировать по Сообщению (автор + RowId) и Статусу
 				автор - получатель уведомления (он же отправитель этого подтверждения), т.е. ссылка на него есть в текушем канале
 				 */
-				LOG.debug("NOTIF_DELIVERED ");
-				long notifRowID = command.dat;        // ИД строки в системе автора сообщения
-				long notifStatus = command.dat2;     // Статус
+                LOG.debug("NOTIF_DELIVERED ");
+                long notifRowID = command.dat;        // ИД строки в системе автора сообщения
+                long notifStatus = command.dat2;     // Статус
 
-				// Удалить уведомление из списка недоставленных
-				ctxChanel.channel().attr(NettyServer.USER).get().removeNotificById(notifRowID, notifStatus);
+                // Удалить уведомление из списка недоставленных
+                ctxChanel.channel().attr(NettyServer.USER).get().removeNotificById(notifRowID, notifStatus);
 
-				break;
-			default:
-				LOG.debug("Command not identyfired =" + command.cmd);
-				break;
-		}
-
-		
-		
-	}
-	
-	
-	
-	
-	
-	@Override
-	public CmdFromUser validTele(Packet packet) {
-
-		CmdFromUser command = (CmdFromUser) packet;	
-		return command;
-		
-	}
-	
-	
-	
-	
-	
-	public UserDAO getUserDao() {
-		return userDao;
-	}
-
-	public void setUserDao(UserDAO userDao) {
-		this.userDao = userDao;
-	}
-
-	public HashMapDB getHashMapDB() {
-		return hashMapDB;
-	}
-
-	public void setHashMapDB(HashMapDB hashMapDB) {
-		this.hashMapDB = hashMapDB;
-	}
-
-	
-	public NotificDAO getNotificDAO() {
-		return notificDAO;
-	}
-
-	public void setNotificDAO(NotificDAO notificDAO) {
-		this.notificDAO = notificDAO;
-	}
+                break;
+            default:
+                LOG.debug("Command not identyfired =" + command.cmd);
+                break;
+        }
 
 
+    }
+
+
+    @Override
+    public CmdFromUser validTele(Packet packet) {
+
+        CmdFromUser command = (CmdFromUser) packet;
+        return command;
+
+    }
+
+
+    public UserDAO getUserDao() {
+        return userDao;
+    }
+
+    public void setUserDao(UserDAO userDao) {
+        this.userDao = userDao;
+    }
+
+    public HashMapDB getHashMapDB() {
+        return hashMapDB;
+    }
+
+    public void setHashMapDB(HashMapDB hashMapDB) {
+        this.hashMapDB = hashMapDB;
+    }
+
+
+    public NotificDAO getNotificDAO() {
+        return notificDAO;
+    }
+
+    public void setNotificDAO(NotificDAO notificDAO) {
+        this.notificDAO = notificDAO;
+    }
 
 
 //	class SendNotifFutureListener implements ChannelFutureListener {
@@ -172,11 +163,6 @@ public class UserCommand implements HandleTelegramm{
 //			}
 //		}
 //	}
-	
-	
-	
-	
-	
-	
+
 
 }

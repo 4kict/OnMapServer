@@ -11,10 +11,8 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Слушатель отправки нотификейшенов.
- *
- *
  */
-public class SendNotifFutureListener  implements ChannelFutureListener {
+public class SendNotifFutureListener implements ChannelFutureListener {
 
     private static final Logger LOG = LogManager.getLogger(SendNotifFutureListener.class);
     private NotificDAO notificDAO;
@@ -25,7 +23,7 @@ public class SendNotifFutureListener  implements ChannelFutureListener {
 //        notifORM = _notifORM;
 //    }
 
-    public void setnotifORM(Notific _notifORM){
+    public void setnotifORM(Notific _notifORM) {
 
     }
 
@@ -33,13 +31,13 @@ public class SendNotifFutureListener  implements ChannelFutureListener {
     public void operationComplete(ChannelFuture future) throws Exception {
         LOG.info("Notif operationComplete");
         // Если Нотифик удалось отправить и он присестивный, удаляем его из МУСКЛ
-        if (future.isSuccess() && notifORM.getId()!=null ){
+        if (future.isSuccess() && notifORM.getId() != null) {
             LOG.info("REMOVE Notif");
             User curentUser = future.channel().attr(NettyServer.USER).get();
             curentUser.removeNotif(notifORM);
         }
         // Если попытки закончены, неудачно и Нотифик не пресист, сохраняем
-        else if (future.isDone() && !future.isSuccess() && notifORM.getId()==null){
+        else if (future.isDone() && !future.isSuccess() && notifORM.getId() == null) {
             notificDAO.saveNotific(notifORM);
         }
     }

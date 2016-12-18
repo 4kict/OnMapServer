@@ -1,12 +1,12 @@
 package gr.ru.processData;
 
 import gr.ru.ApplicationContextUtils;
-import gr.ru.geocoder.GeoDecoder;
 import gr.ru.HashMapDB;
 import gr.ru.dao.Mesage;
 import gr.ru.dao.Notific;
 import gr.ru.dao.User;
 import gr.ru.dao.UserDAO;
+import gr.ru.geocoder.GeoDecoder;
 import gr.ru.gutil;
 import gr.ru.netty.NettyServer;
 import gr.ru.netty.protokol.Packet;
@@ -43,7 +43,7 @@ public class RegUser implements HandleTelegramm {
 
 		
 		/* !!!ATTENTION!!! 
-		 * Надо крайне осторожно сбрасывать таблицу юзеров на сервере (сохранять сквозную нумерацию), т.к. пока нет механизма оповещения о сбросе уникальных ИД
+         * Надо крайне осторожно сбрасывать таблицу юзеров на сервере (сохранять сквозную нумерацию), т.к. пока нет механизма оповещения о сбросе уникальных ИД
 		 * Проблемма: если у юзера в МУСЛК сохранены аппоненты со старыми ИД, а МУСКЛ на сервере сброшен и юзерам будут присвоены новые ИД, очевидно что сообщения пойдут не по адресу  
 		 * ХОрошо бы заставить всех юзеров сбросить свои базы аппонентов, но пока не понятно как заставить это сделать тех кто в оффлайне. 
 		 * Хорошо бы сохранять оповещения, но что бы их раздавать, надо отличать: - регистрация, - переконнект, - обновление рег данных, - юзер с данными от сброшенной МУСКЛ. 
@@ -59,7 +59,7 @@ public class RegUser implements HandleTelegramm {
         // ********* ПРЕ -РЕГИСТРАЦИЯ ***********
         // пришили регистрационные данные без координат, при этом такой юзер уже есть в МУСКЛ, он должне получать все сообщения
         if (regData.lat == 0 && regData.lon == 0 && regData.qad == 0 && ctxChanel.channel().attr(NettyServer.SESSION).get() == null && regData.sesion == 0
-                && ctxChanel.channel().attr(NettyServer.USER).get() == null ) {
+                && ctxChanel.channel().attr(NettyServer.USER).get() == null) {
             LOG.trace("PreReg new User " + regData.name);
             if (user != null) {
                 user.setChanel(ctxChanel.channel());                    // Сохраняем ссылку на Канал в Юзере
@@ -96,11 +96,7 @@ public class RegUser implements HandleTelegramm {
             registrationAccept(ctxChanel, user);
 
 
-
-
         }
-
-
 
 
         // ********* ОБНОВЛЕНИЕ рег.данных ***********
@@ -206,7 +202,7 @@ public class RegUser implements HandleTelegramm {
     }
 
 
-    private void registrationAccept(ChannelHandlerContext ctxChanel, User user){
+    private void registrationAccept(ChannelHandlerContext ctxChanel, User user) {
         ctxChanel.channel().attr(NettyServer.SESSION).set(new Random().nextInt());     // Устанавливаем Сессию
         ctxChanel.channel().attr(NettyServer.USER).set(user);    // Записываем в Коннект Юзера
         // Оповещаем Юзера

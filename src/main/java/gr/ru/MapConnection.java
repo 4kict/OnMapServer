@@ -14,7 +14,7 @@ package gr.ru;
 //import gr.ru.dao.Notific;
 //import gr.ru.dao.User;
 
-public class MapConnection  {
+public class MapConnection {
 /*public class MapConnection extends Connection {
 
 

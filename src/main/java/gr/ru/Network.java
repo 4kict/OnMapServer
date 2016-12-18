@@ -7,8 +7,8 @@ package gr.ru;
 
 //This class is a convenient place to keep things common to both the client and server.
 public class Network {
-  static public final int portTCP = 56888;
-  static public final int portUDP = 56999;
+    static public final int portTCP = 56888;
+    static public final int portUDP = 56999;
 
   /*
   // This registers objects that are going to be sent over the network.
