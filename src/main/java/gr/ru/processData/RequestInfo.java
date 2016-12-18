@@ -8,8 +8,8 @@ import gr.ru.netty.protokol.PacketFactory;
 import gr.ru.netty.protokol.Packs2Client.UserInfo;
 import gr.ru.netty.protokol.Packs2Server.ReqUserInfo;
 import io.netty.channel.ChannelHandlerContext;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 public class RequestInfo implements HandleTelegramm {
 

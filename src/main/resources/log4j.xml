@@ -20,8 +20,8 @@
     </appender>
 
     <!-- Вывод в файл -->
-    <appender name="FileTrace" class="org.apache.log4j.RollingFileAppender">
-        <param name="File" value="onmapserver.log"/>
+    <appender name="fileRoot" class="org.apache.log4j.RollingFileAppender">
+        <param name="File" value="logs/root.log"/>
         <param name="MaxFileSize" value="1MB"/>
         <param name="MaxBackupIndex" value="10"/>
         <param name="Encoding" value="UTF-8"/>
@@ -31,8 +31,8 @@
     </appender>
 
     <!-- Вывод в файл -->
-    <appender name="FileWork" class="org.apache.log4j.RollingFileAppender">
-        <param name="File" value="debuger.log"/>
+    <appender name="fileGr" class="org.apache.log4j.RollingFileAppender">
+        <param name="File" value="logs/log.log"/>
         <param name="MaxFileSize" value="1MB"/>
         <param name="MaxBackupIndex" value="10"/>
         <param name="Encoding" value="UTF-8"/>
@@ -43,15 +43,18 @@
 
 
     <!--<logger name="gr.ru" additivity="false">-->
-    <logger name="gr.ru">
+
+
+    <logger name="gr.ru" additivity="false">
         <level value="TRACE"/>
-        <appender-ref ref="FileWork"/>
-        <appender-ref ref="ConsoleAppender"/>
+        <appender-ref ref="fileGr"/>
+        <!--<appender-ref ref="ConsoleAppender"/>-->
     </logger>
 
     <root>
-        <priority value="DEBUG"/>
-        <appender-ref ref="FileTrace"/>
+        <priority value="WARN"/>
+        <appender-ref ref="fileRoot"/>
     </root>
+
 
 </log4j:configuration>
