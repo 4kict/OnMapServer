@@ -13,7 +13,7 @@
     <!-- Вывод на консоль -->
     <appender name="ConsoleAppender" class="org.apache.log4j.ConsoleAppender">
         <param name="Encoding" value="Cp866"/>
-        <param name="Threshold" value="INFO"/>
+        <!--<param name="Threshold" value="INFO"/>-->
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d{ABSOLUTE} [%-5p][%-15.15t][%23.23c] - %m%n"/>
         </layout>
@@ -22,7 +22,7 @@
     <!-- Вывод в файл -->
     <appender name="fileRoot" class="org.apache.log4j.RollingFileAppender">
         <param name="File" value="logs/root.log"/>
-        <param name="MaxFileSize" value="1MB"/>
+        <param name="MaxFileSize" value="2MB"/>
         <param name="MaxBackupIndex" value="10"/>
         <param name="Encoding" value="UTF-8"/>
         <layout class="org.apache.log4j.PatternLayout">
@@ -33,7 +33,7 @@
     <!-- Вывод в файл -->
     <appender name="fileGr" class="org.apache.log4j.RollingFileAppender">
         <param name="File" value="logs/log.log"/>
-        <param name="MaxFileSize" value="1MB"/>
+        <param name="MaxFileSize" value="2MB"/>
         <param name="MaxBackupIndex" value="10"/>
         <param name="Encoding" value="UTF-8"/>
         <layout class="org.apache.log4j.PatternLayout">
@@ -52,7 +52,7 @@
     </logger>
 
     <root>
-        <priority value="WARN"/>
+        <priority value="INFO"/>
         <appender-ref ref="fileRoot"/>
     </root>
 

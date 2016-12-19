@@ -16,8 +16,9 @@ public class HashMapDB {
 
     private HashMap<Long, User> usersHashMap = new HashMap<Long, User>();
 
-    public void add(User user) {
-        usersHashMap.put(user.getId(), user);
+    public void add(Long key ,User user) {
+        LOG.trace("add new User to hashMap=" + user);
+        usersHashMap.put(key, user);
     }
 
     public Channel getMapConnect(Long uId) {

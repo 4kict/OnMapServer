@@ -63,7 +63,8 @@ public class RegUser implements HandleTelegramm {
             LOG.trace("PreReg new User " + regData.name);
             if (user != null) {
                 user.setChanel(ctxChanel.channel());                    // Сохраняем ссылку на Канал в Юзере
-                hashMapDB.add(user);                                    // Сохраняем Юзера в Оперативной базе
+                userDao.saveOrUpdate(user);                        // Сохраняем Юзера в МУСКЛ
+                hashMapDB.add(user.getId(), user);                                    // Сохраняем Юзера в Оперативной базе
                 registrationAccept(ctxChanel, user);
             } else {
                 LOG.debug("new regData without position, or first connection.");
@@ -90,9 +91,8 @@ public class RegUser implements HandleTelegramm {
 
             user.setStatus(gutil.STATUS_ACTIVE);            // Устанавличае что Юзер активен
             user.setChanel(ctxChanel.channel());                        // Сохраняем ссылку на Коннект в Юзере
-            hashMapDB.add(user);                            // Сохраняем Юзера в Оперативной базе
             userDao.saveOrUpdate(user);                        // Сохраняем Юзера в МУСКЛ
-
+            hashMapDB.add(user.getId(), user);                            // Сохраняем Юзера в Оперативной базе
             registrationAccept(ctxChanel, user);
 
 
@@ -118,9 +118,9 @@ public class RegUser implements HandleTelegramm {
                 user.setIcon((byte) regData.ico);
                 user.setStatus(gutil.STATUS_ACTIVE);            // Устанавличае что Юзер активен
                 user.setChanel(ctxChanel.channel());                    // Сохраняем ссылку на Коннект в Юзере
-                hashMapDB.add(user);                            // Сохраняем Юзера в Оперативной базе
                 userDao.saveOrUpdate(user);                        // Сохраняем Юзера в МУСКЛ
-
+                hashMapDB.add(user.getId(), user);                            // Сохраняем Юзера в Оперативной базе
+                LOG.trace("new user aded= " + user);
                 registrationAccept(ctxChanel, user);
 
 
@@ -143,7 +143,7 @@ public class RegUser implements HandleTelegramm {
         // Запуск ГЕОКОДЕРА
         // ***********************
         // Бин Геокодера должен быть prototype (т.е. каждый вызов - новый бин), по этому тут каждый раз создается новый бин
-        LOG.trace("GEOCODER " + user.getLastGeoDecode() + " " + user.getCountry() + " " + regData.lat + " " + regData.lon);
+        LOG.trace("Run GEOCODER " + user.getLastGeoDecode() + " " + user.getCountry() + " " + regData.lat + " " + regData.lon);
         if ((user.getLastGeoDecode() < (System.currentTimeMillis() - gutil.SETUP_GEODECODE_TIMEOUT) ||
                 user.getCountry() == null ||
                 user.getCity() == null) &&
