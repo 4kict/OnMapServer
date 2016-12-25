@@ -44,7 +44,7 @@ public class NettyServer {
         // 1. define a separate thread pool to execute handlers with
         //    slow business logic. e.g database operation
         // ===========================================================
-        final EventExecutorGroup group = new DefaultEventExecutorGroup(1500); //thread pool of 1500
+        final EventExecutorGroup group = new DefaultEventExecutorGroup(4); //thread pool of 1500
 
         NioEventLoopGroup boosGroup = new NioEventLoopGroup();
         NioEventLoopGroup workerGroup = new NioEventLoopGroup();

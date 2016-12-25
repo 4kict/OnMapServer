@@ -96,6 +96,7 @@ public class MapServerHandler extends SimpleChannelInboundHandler<Packet> {
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         userDisconnect.handle(ctx, null);
+        ctx.close();
         LOG.trace("channel Inactive " + ctx.channel().id() + " addr=" + ctx.channel().remoteAddress());
     }
 
