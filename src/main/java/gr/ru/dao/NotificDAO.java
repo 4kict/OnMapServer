@@ -21,6 +21,7 @@ public class NotificDAO {
     }
 
     // Сохраняем оповещение предварительно найдя Автора сообщения (Автор сообщения - он же получатель оповещения)
+    // FixMe Что бы сохранить опопвещение со всеми необходимыми данными делается лишный запрос в БД???
     @Transactional
     public void saveNotific(Notific notifORM, Long autorId) {
         User recipient = (User) sessionFactory.getCurrentSession().get(User.class, autorId);

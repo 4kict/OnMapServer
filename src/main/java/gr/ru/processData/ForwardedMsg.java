@@ -1,10 +1,7 @@
 package gr.ru.processData;
 
 import gr.ru.HashMapDB;
-import gr.ru.dao.MesagaDAO;
-import gr.ru.dao.Mesage;
-import gr.ru.dao.Notific;
-import gr.ru.dao.User;
+import gr.ru.dao.*;
 import gr.ru.gutil;
 import gr.ru.netty.NettyServer;
 import gr.ru.netty.protokol.Packet;
@@ -15,14 +12,15 @@ import gr.ru.netty.protokol.Packs2Server.MsgFromUser;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class ForwardedMsg implements HandleTelegramm {
     private static final Logger LOG = LogManager.getLogger(ForwardedMsg.class);
 
     private MesagaDAO mesagaDAO;
     private HashMapDB hashMapDB;
-    final int TYPE_PHOTO = 1;
-    final int TYPE_VIDEO = 2;
+    @Autowired
+    private UserDAO userDAO;
 
 
     @Override
@@ -35,18 +33,10 @@ public class ForwardedMsg implements HandleTelegramm {
             return;
         }
 
+        // Создаем и отправляем оповещение для автора
+        Notific notifORM = sendNotific(ctxChanel, msgTelega.rowid, gutil.MSG_ONSERVER);
 
-        // Создаем оповещение для автора
-        Notific notifORM = new Notific();
-        notifORM.setLocalRowId(msgTelega.rowid);
-        notifORM.setTime(System.currentTimeMillis());                    // Любой нотификейшн хранит время появления сообщения на сервере (надо для автора собщения)
-        notifORM.setUserRecipient(ctxChanel.channel().attr(NettyServer.USER).get());
-        notifORM.setStatus(gutil.MSG_ONSERVER);                            // ставим статус оповещению НА СЕРВЕРЕ
-        // Сохраняем в Юзере (в авторе)
-        ctxChanel.channel().attr(NettyServer.USER).get().getUnRecivedNotif().add(notifORM);
-        // Перегоняем оповещение в нужный формат и отправляем автору сообщения
-        ServerStat serverStat = notifORM.fillNettyPack((ServerStat) PacketFactory.produce(PacketFactory.SERVER_STAT));
-        ctxChanel.writeAndFlush(serverStat);        // Отправляем оповещение (БЕЗ слушателя)
+        // ищем получателя оповещения
 
 
         // Создаем новое сообщение из входящей телеграммы
@@ -59,15 +49,6 @@ public class ForwardedMsg implements HandleTelegramm {
         // Поиск Юзера получателя сообщение
         User recipientUser = hashMapDB.getUser(msgTelega.to);        // Возможно НУЛЛ, будет проверено на этапе попытки отправить ему сообщение
         msgORM.setUserRecipient(recipientUser);
-
-        // Поиск объекта User получателя сообщение
-        //User autorUser = hashMapDB.getUser( mapConnect.getUserId()  ); // Понадобится толкьо если оповещение не дойдет, и в таком случае лучше брать из МУСКЛ
-
-
-//		// Нотификейшны отправляем с привязанным слушателем (потенциально, оповещение может не дойти, а сервер-слушатель будет уверен что дошло)
-//		SendNotifFutureListener sendNotifFuture = new SendNotifFutureListener();
-//		sendNotifFuture.setnotifORM(notifORM);
-//		ctxChanel.writeAndFlush(serverStat).addListener(sendNotifFuture );
 
 
         //Получатель найден и вроде бы в сети
@@ -84,9 +65,22 @@ public class ForwardedMsg implements HandleTelegramm {
             mesagaDAO.saveMesaga(msgORM, msgTelega.to);                    // сохраняем сообщение на сервере
         }
 
-
     }
 
+    private Notific sendNotific(ChannelHandlerContext ctxChanel, long rowId, int status) {
+        // Создаем оповещение для автора
+        Notific notifORM = new Notific();
+        notifORM.setLocalRowId(rowId);
+        notifORM.setTime(System.currentTimeMillis());                    // Любой нотификейшн хранит время появления сообщения на сервере (надо для автора собщения)
+        notifORM.setUserRecipient(ctxChanel.channel().attr(NettyServer.USER).get());
+        notifORM.setStatus(status);                            // ставим статус оповещению НА СЕРВЕРЕ
+        // Сохраняем в Юзере (в авторе)
+        ctxChanel.channel().attr(NettyServer.USER).get().getUnRecivedNotif().add(notifORM);
+        // Перегоняем оповещение в нужный формат и отправляем автору сообщения
+        ServerStat serverStat = notifORM.fillNettyPack((ServerStat) PacketFactory.produce(PacketFactory.SERVER_STAT));
+        ctxChanel.writeAndFlush(serverStat);        // Отправляем оповещение (БЕЗ слушателя)
+        return notifORM;
+    }
 
     @Override
     public MsgFromUser validTele(Packet packet) {

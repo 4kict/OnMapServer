@@ -11,52 +11,48 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 
-public class UserDisconnect implements HandleTelegramm{
+public class UserDisconnect implements HandleTelegramm {
 
-	private static final Logger LOG = LogManager.getLogger(UserDisconnect.class);
-	private UserDAO userDao;		// 
-	private HashMapDB hashMapDB;
+    private static final Logger LOG = LogManager.getLogger(UserDisconnect.class);
+    private UserDAO userDao;        //
+    private HashMapDB hashMapDB;
 
-	@Override
-	public void handle(ChannelHandlerContext ctxChanel, Packet packet) {
-		User userToDelete = ctxChanel.channel().attr(NettyServer.USER).get();
+    @Override
+    public void handle(ChannelHandlerContext ctxChanel, Packet packet) {
+        User userToDelete = ctxChanel.channel().attr(NettyServer.USER).get();
 
-		if (userToDelete!=null){	
-			userToDelete.setStatus(gutil.STATUS_OFFLINE);
+        if (userToDelete != null) {
+            userToDelete.setStatus(gutil.STATUS_OFFLINE);
 
-			LOG.debug("userToDelete=" + userToDelete);
+            LOG.debug("userToDelete=" + userToDelete);
 
-			userDao.saveOrUpdate(userToDelete);							// Если нашли, сохраняем его последние данные в МУСКЛ, предварительно сделав его ОФФЛАЙН
-			hashMapDB.removeUser(userToDelete.getId() );					// Удаляем из Хэша
-		}			
+            userDao.saveOrUpdate(userToDelete);                            // Если нашли, сохраняем его последние данные в МУСКЛ, предварительно сделав его ОФФЛАЙН
+            hashMapDB.removeUser(userToDelete.getId());                    // Удаляем из Хэша
+        }
 
-	}
+    }
 
-	@Override
-	public Packet validTele( Packet packet) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Packet validTele(Packet packet) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	public UserDAO getUserDao() {
-		return userDao;
-	}
+    public UserDAO getUserDao() {
+        return userDao;
+    }
 
-	public void setUserDao(UserDAO userDao) {
-		this.userDao = userDao;
-	}
+    public void setUserDao(UserDAO userDao) {
+        this.userDao = userDao;
+    }
 
-	public HashMapDB getHashMapDB() {
-		return hashMapDB;
-	}
+    public HashMapDB getHashMapDB() {
+        return hashMapDB;
+    }
 
-	public void setHashMapDB(HashMapDB hashMapDB) {
-		this.hashMapDB = hashMapDB;
-	}
-
-
-
-
+    public void setHashMapDB(HashMapDB hashMapDB) {
+        this.hashMapDB = hashMapDB;
+    }
 
 
 }

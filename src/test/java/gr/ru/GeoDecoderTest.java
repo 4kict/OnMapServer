@@ -1,8 +1,17 @@
 package gr.ru;
 
 import com.google.gson.Gson;
-import gr.ru.geocoder.GeoCoderResponse;
+import gr.ru.dao.MesagaDAO;
+import gr.ru.dao.Mesage;
+import gr.ru.dao.User;
+import gr.ru.processData.ForwardedMsg;
+import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.util.Assert;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -13,7 +22,44 @@ import java.nio.charset.Charset;
 /**
  * Created by Gri on 11.12.2016.
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"/configSpring.xml"})
 public class GeoDecoderTest {
+
+
+    @Autowired
+    MesagaDAO mesagaDAO;
+
+    private ForwardedMsg forwardedMsg;
+
+    @Test
+    public void forwardedMsgTest(){
+
+    }
+
+    @Test
+    public void saveMessageWithoutUserTest() {
+        Assert.notNull(mesagaDAO);
+        Mesage mesage = new Mesage();
+        mesage.setAutorId(123L);
+        mesage.setLocalRowId(321L);
+        mesage.setMesaga("some text");
+        mesage.setMsgType((short) 1);
+        mesage.setTime(9999L);
+        User user = new User();
+        user.setId(1119L);
+        mesage.setUserRecipient(user);
+        try{
+            mesagaDAO.saveMesaga(mesage);
+        }catch (ConstraintViolationException e){
+            System.out.println("Fuck off!!!");
+        }
+
+
+        String locale = "";
+        System.out.println(locale.getBytes());
+
+    }
 
     @Test
     public void execute() throws Exception {
