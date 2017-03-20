@@ -1,26 +1,21 @@
 package gr.ru.dao;
 
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-
-
-
-/*
+/**
  * Этот класс ничего не знает о авторе, но жестко связан с получателем
  */
-
+@Component
 public class MesagaDAO {
+    @Autowired
     private SessionFactory sessionFactory;
 
     public MesagaDAO() {
         // TODO Auto-generated constructor stub
     }
-
-    public MesagaDAO(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
-
 
     @Transactional
     public void saveMesaga(Mesage msgORM, long to) {
@@ -38,10 +33,10 @@ public class MesagaDAO {
         sessionFactory.getCurrentSession().saveOrUpdate(msgORM);
     }
 
-    @Transactional
-    public void delete(Mesage msgORM) {
-        sessionFactory.getCurrentSession().delete(msgORM);
-    }
+//    @Transactional
+//    public void delete(Mesage msgORM) {
+//        sessionFactory.getCurrentSession().delete(msgORM);
+//    }
 
 
 //	@Transactional
@@ -110,22 +105,6 @@ public class MesagaDAO {
 //		
 //		return null;
 //	}
-//	
-
-
-    /**
-     * @return the sessionFactory
-     */
-    public SessionFactory getSessionFactory() {
-        return sessionFactory;
-    }
-
-    /**
-     * @param sessionFactory the sessionFactory to set
-     */
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
-
+//
 
 }

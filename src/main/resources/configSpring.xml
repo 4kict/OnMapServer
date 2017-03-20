@@ -2,22 +2,27 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
-		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd">
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
     <aop:aspectj-autoproxy proxy-target-class="true"/>
-
-    <!-- <context:component-scan base-package="gr.ru.dao, gr.ru.processData"></context:component-scan> -->
+    <tx:annotation-driven transaction-manager="txManager"/>
+    <context:component-scan base-package="gr.ru.processData"/>
+    <context:component-scan base-package="gr.ru.dao"/>
 
     <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
-        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-        <!--<property name="url" value="jdbc:mysql://localhost:3306/gridb?useUnicode=true&amp;characterEncoding=utf8mb4"/>-->
-        <property name="url" value="jdbc:mysql://localhost:3306/gridb?useUnicode=true"/>
-        <property name="username" value="grisha"/>
-        <property name="password" value="MashGrish"/>
+    <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+    <!--<property name="url" value="jdbc:mysql://localhost:3306/gridb?useUnicode=true&amp;characterEncoding=utf8mb4"/>-->
+    <property name="url" value="jdbc:mysql://localhost:3306/gridb?useUnicode=true"/>
+    <property name="username" value="grisha"/>
+    <property name="password" value="MashGrish"/>
     </bean>
+
+    <!--<bean id="dataSource" class="org.unitils.database.UnitilsDataSourceFactoryBean"/>-->
+
     <bean id="sessionFactory"
           class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
@@ -25,93 +30,30 @@
         <property name='packagesToScan' value="gr.ru"/>
         <property name='hibernateProperties'>
             <value>
-                <!-- hibernate.dialect=org.hibernate.dialect. MySQL5Dialect -->
             </value>
-            <!-- <props> -->
-            <!-- <prop key='hibernate.'>org.hibernate.dialect.MySQL5Dialect</prop> -->
-            <!-- </props> -->
         </property>
     </bean>
-    <bean id="txManager"
-          class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+
+    <bean id="txManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
-
-    <tx:annotation-driven transaction-manager="txManager"/>
 
     <bean id="sendNotifFutureListener" class="gr.ru.processData.SendNotifFutureListener">
         <property name="notificDAO" ref="notificDAO"/>
     </bean>
 
-    <bean id="mapServerHandler" class="gr.ru.netty.MapServerHandler" scope="prototype">
-        <property name="forwardedMsg" ref="forwardedMsg"/>
-        <property name="requestInfo" ref="requestInfo"/>
-        <property name="requestList" ref="requestList"/>
-        <property name="userPositionProc" ref="userPositionProc"/>
-        <property name="regUser" ref="regUser"/>
-        <property name="userDisconnect" ref="userDisconnect"/>
-        <property name="userCommand" ref="userCommand"/>
-        <property name="forwardFile" ref="forwardFile"/>
-    </bean>
+    <bean id="mapServerHandler" class="gr.ru.netty.MapServerHandler" scope="prototype"/>
 
-    <bean id="regUser" class="gr.ru.processData.RegUser">
-        <property name="userDao" ref="userDAO"/>
-
-
-        <property name="hashMapDB" ref="hashMapDB"/>
-
-    </bean>
-    <bean id="forwardedMsg" class="gr.ru.processData.ForwardedMsg">
-        <property name="hashMapDB" ref="hashMapDB"/>
-        <property name="mesagaDAO" ref="mesageDAO"/>
-    </bean>
-
-    <bean id="forwardFile" class="gr.ru.processData.ForwardFile">
-        <property name="hashMapDB" ref="hashMapDB"/>
-        <property name="mesagaDAO" ref="mesageDAO"/>
-    </bean>
-
-    <bean id="requestInfo" class="gr.ru.processData.RequestInfo">
-        <property name="hashMapDB" ref="hashMapDB"/>
-        <property name="userDao" ref="userDAO"/>
-    </bean>
-    <bean id="requestList" class="gr.ru.processData.RequestList">
-        <property name="hashMapDB" ref="hashMapDB"/>
-    </bean>
-    <bean id="userPositionProc" class="gr.ru.processData.UserPositionProc">
-        <property name="userDao" ref="userDAO"/>
-    </bean>
-    <bean id="userDAO" class="gr.ru.dao.UserDAO">
-        <property name="sessionFactory" ref="sessionFactory"/>
-
-
-    </bean>
     <bean id="hashMapDB" class="gr.ru.HashMapDB"/>
+
     <bean id="geoDecoder" class="gr.ru.geocoder.GeoDecoder" scope="prototype">
         <property name="userDao" ref="userDAO"/>
-
-    </bean>
-    <bean id="mesageDAO" class="gr.ru.dao.MesagaDAO">
-        <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean
-            class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
+    <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
 
-    <bean id="userDisconnect" class="gr.ru.processData.UserDisconnect">
-        <property name="hashMapDB" ref="hashMapDB"/>
-        <property name="userDao" ref="userDAO"/>
-    </bean>
-    <bean id="applicationContextUtils" class="gr.ru.ApplicationContextUtils">
-    </bean>
-    <bean id="notificDAO" class="gr.ru.dao.NotificDAO">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="userCommand" class="gr.ru.processData.UserCommand">
-        <property name="hashMapDB" ref="hashMapDB"/>
-        <property name="userDao" ref="userDAO"/>
-        <property name="notificDAO" ref="notificDAO"/>
-    </bean>
+    <bean id="applicationContextUtils" class="gr.ru.ApplicationContextUtils" />
+
     <bean id="logerAop" class="gr.ru.LoggerAOP"/>
 
 </beans>

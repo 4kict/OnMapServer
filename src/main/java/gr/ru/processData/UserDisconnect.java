@@ -9,12 +9,16 @@ import gr.ru.netty.protokol.Packet;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-
+@Component
 public class UserDisconnect implements HandleTelegramm {
 
     private static final Logger LOG = LogManager.getLogger(UserDisconnect.class);
-    private UserDAO userDao;        //
+    @Autowired
+    private UserDAO userDao;
+    @Autowired
     private HashMapDB hashMapDB;
 
     @Override
@@ -29,7 +33,6 @@ public class UserDisconnect implements HandleTelegramm {
             userDao.saveOrUpdate(userToDelete);                            // Если нашли, сохраняем его последние данные в МУСКЛ, предварительно сделав его ОФФЛАЙН
             hashMapDB.removeUser(userToDelete.getId());                    // Удаляем из Хэша
         }
-
     }
 
     @Override
@@ -37,22 +40,5 @@ public class UserDisconnect implements HandleTelegramm {
         // TODO Auto-generated method stub
         return null;
     }
-
-    public UserDAO getUserDao() {
-        return userDao;
-    }
-
-    public void setUserDao(UserDAO userDao) {
-        this.userDao = userDao;
-    }
-
-    public HashMapDB getHashMapDB() {
-        return hashMapDB;
-    }
-
-    public void setHashMapDB(HashMapDB hashMapDB) {
-        this.hashMapDB = hashMapDB;
-    }
-
 
 }

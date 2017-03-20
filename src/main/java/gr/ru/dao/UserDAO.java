@@ -3,26 +3,23 @@ package gr.ru.dao;
 import gr.ru.gutil;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 
-//@Repository("UserDAO")
+@Component
 public class UserDAO {
 
-    //@Autowired
+    @Autowired
     private SessionFactory sessionFactory;
 
 
     public UserDAO() {
         // TODO Auto-generated constructor stub
     }
-
-    public UserDAO(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
-
 
 //	@Transactional
 //	public List<User> list() {
@@ -162,21 +159,5 @@ public class UserDAO {
         return listUser.size();
 
     }
-
-
-    /**
-     * @return the sessionFactory
-     */
-    public SessionFactory getSessionFactory() {
-        return sessionFactory;
-    }
-
-    /**
-     * @param sessionFactory the sessionFactory to set
-     */
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
-
 
 }

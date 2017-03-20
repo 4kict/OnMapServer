@@ -2,11 +2,14 @@ package gr.ru.dao;
 
 import gr.ru.gutil;
 import io.netty.channel.Channel;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
+import static gr.ru.gutil.MSG_ONSERVER;
 
 
 @Entity
@@ -26,7 +29,7 @@ public class User extends MainEntity {
     @Column
     private Long lastGeoDecode = 0L;            // время обновления ГЕКОДЕРА (и сохранения в МУСКЛ)
     @Column
-    private int status = gutil.STATUS_OFFLINE;
+    private Integer status = gutil.STATUS_OFFLINE;
     @Column(unique = true)
     private Long hashkey;        // Идентификатор юзера (отпечаток уникальных данных устройства юзера, известен только серверу)
     @Column
@@ -44,15 +47,14 @@ public class User extends MainEntity {
     @Column
     private Byte icon = 0;
     @OneToMany(mappedBy = "userRecipient", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @Where(clause = "status = " + MSG_ONSERVER)
     private Set<Mesage> unRecivedMsg = new HashSet<Mesage>();
     @OneToMany(mappedBy = "userRecipient", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<Notific> unRecivedNotif = new HashSet<Notific>();
 
-
     public boolean isCluster() {
         return cluster;
     }
-
 
     public byte getIcon() {
         return icon;
@@ -119,7 +121,7 @@ public class User extends MainEntity {
     }
 
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
@@ -168,15 +170,15 @@ public class User extends MainEntity {
         }
     }
 
-    public void removeMesagaById(long msgAutorID, long msgRowID) {
-        Iterator<Mesage> iterator = this.unRecivedMsg.iterator();
-        while (iterator.hasNext()) {        // Перебираем все недополоученные сообщения.
-            Mesage msgRMO = iterator.next();
-            if (msgRMO.getAutorId() == msgAutorID && msgRMO.getLocalRowId() == msgRowID) {
-                iterator.remove();            // Удаляем
+    public Mesage getMesagaById(long msgAutorID, long msgRowID) {
+        for (Mesage mesage : this.unRecivedMsg) {
+            if (mesage.getAutorId() == msgAutorID && mesage.getLocalRowId() == msgRowID) {
+                return mesage;
             }
         }
+        return null;
     }
+
 
     public void removeNotificById(long notifRowID, long notifStatus) {
         Iterator<Notific> iterator = this.unRecivedNotif.iterator();

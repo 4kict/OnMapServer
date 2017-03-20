@@ -4,6 +4,7 @@ import gr.ru.dao.User;
 import io.netty.channel.Channel;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Random;
@@ -12,7 +13,7 @@ import java.util.UUID;
 //import org.apache.log4j.LogManager;
 //import org.apache.logging.log4j.Logger;
 
-
+@Component
 public class HashMapDB {
     private static final Logger LOG = LogManager.getLogger(MyApp.class);
     //private HashSet<User> usersHashSet = new HashSet<User>();

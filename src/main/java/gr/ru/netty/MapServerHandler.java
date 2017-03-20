@@ -11,16 +11,24 @@ import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class MapServerHandler extends SimpleChannelInboundHandler<Packet> {
-
+    @Autowired
     private ForwardedMsg forwardedMsg;
+    @Autowired
     private UserPositionProc userPositionProc;
+    @Autowired
     private RegUser regUser;
+    @Autowired
     private RequestInfo requestInfo;
+    @Autowired
     private RequestList requestList;
+    @Autowired
     private UserDisconnect userDisconnect;
+    @Autowired
     private UserCommand userCommand;
+    @Autowired
     private ForwardFile forwardFile;
     private static final Logger LOG = LogManager.getLogger(MapServerHandler.class);
 
@@ -115,67 +123,4 @@ public class MapServerHandler extends SimpleChannelInboundHandler<Packet> {
         ctx.close();
     }
 
-    public ForwardedMsg getForwardedMsg() {
-        return forwardedMsg;
-    }
-
-    public void setForwardedMsg(ForwardedMsg forwardedMsg) {
-        this.forwardedMsg = forwardedMsg;
-    }
-
-    public UserPositionProc getUserPositionProc() {
-        return userPositionProc;
-    }
-
-    public void setUserPositionProc(UserPositionProc userPositionProc) {
-        this.userPositionProc = userPositionProc;
-    }
-
-    public RegUser getRegUser() {
-        return regUser;
-    }
-
-    public void setRegUser(RegUser regUser) {
-        this.regUser = regUser;
-    }
-
-    public RequestInfo getRequestInfo() {
-        return requestInfo;
-    }
-
-    public void setRequestInfo(RequestInfo requestInfo) {
-        this.requestInfo = requestInfo;
-    }
-
-    public RequestList getRequestList() {
-        return requestList;
-    }
-
-    public void setRequestList(RequestList requestList) {
-        this.requestList = requestList;
-    }
-
-    public UserDisconnect getUserDisconnect() {
-        return userDisconnect;
-    }
-
-    public void setUserDisconnect(UserDisconnect userDisconnect) {
-        this.userDisconnect = userDisconnect;
-    }
-
-    public UserCommand getUserCommand() {
-        return userCommand;
-    }
-
-    public void setUserCommand(UserCommand userCommand) {
-        this.userCommand = userCommand;
-    }
-
-    public ForwardFile getForwardFile() {
-        return forwardFile;
-    }
-
-    public void setForwardFile(ForwardFile forwardFile) {
-        this.forwardFile = forwardFile;
-    }
 }

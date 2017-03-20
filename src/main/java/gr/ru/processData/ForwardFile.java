@@ -16,6 +16,8 @@ import io.netty.channel.ChannelHandlerContext;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -26,9 +28,12 @@ import java.util.Arrays;
 /**
  * Created by Gri on 26.09.2016.
  */
+@Component
 public class ForwardFile implements HandleTelegramm {
     private static final Logger LOG = LogManager.getLogger(ForwardFile.class);
+    @Autowired
     private MesagaDAO mesagaDAO;
+    @Autowired
     private HashMapDB hashMapDB;
 
     @Override
@@ -233,23 +238,6 @@ public class ForwardFile implements HandleTelegramm {
             return msgTelega;
         }
 
-    }
-
-
-    public MesagaDAO getMesagaDAO() {
-        return mesagaDAO;
-    }
-
-    public void setMesagaDAO(MesagaDAO mesagaDAO) {
-        this.mesagaDAO = mesagaDAO;
-    }
-
-    public HashMapDB getHashMapDB() {
-        return hashMapDB;
-    }
-
-    public void setHashMapDB(HashMapDB hashMapDB) {
-        this.hashMapDB = hashMapDB;
     }
 
 

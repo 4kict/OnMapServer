@@ -10,11 +10,16 @@ import gr.ru.netty.protokol.Packs2Server.ReqUserInfo;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class RequestInfo implements HandleTelegramm {
 
     private static final Logger LOG = LogManager.getLogger(RequestInfo.class);
+    @Autowired
     private HashMapDB hashMapDB;
+    @Autowired
     private UserDAO userDao;
 
     @Override
@@ -65,22 +70,5 @@ public class RequestInfo implements HandleTelegramm {
         }
 
     }
-
-    public HashMapDB getHashMapDB() {
-        return hashMapDB;
-    }
-
-    public void setHashMapDB(HashMapDB hashMapDB) {
-        this.hashMapDB = hashMapDB;
-    }
-
-    public UserDAO getUserDao() {
-        return userDao;
-    }
-
-    public void setUserDao(UserDAO userDao) {
-        this.userDao = userDao;
-    }
-
 
 }

@@ -1,10 +1,7 @@
 package gr.ru.processData;
 
 import gr.ru.HashMapDB;
-import gr.ru.dao.Notific;
-import gr.ru.dao.NotificDAO;
-import gr.ru.dao.User;
-import gr.ru.dao.UserDAO;
+import gr.ru.dao.*;
 import gr.ru.gutil;
 import gr.ru.netty.NettyServer;
 import gr.ru.netty.protokol.Packet;
@@ -14,11 +11,21 @@ import gr.ru.netty.protokol.Packs2Server.CmdFromUser;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import static gr.ru.gutil.MSG_DELIVERED;
+
+@Component
 public class UserCommand implements HandleTelegramm {
     private static final Logger LOG = LogManager.getLogger(UserCommand.class);
+    @Autowired
     private UserDAO userDao;
+    @Autowired
+    private MesagaDAO mesagaDAO;
+    @Autowired
     private NotificDAO notificDAO;
+    @Autowired
     private HashMapDB hashMapDB;
 
 
@@ -49,23 +56,35 @@ public class UserCommand implements HandleTelegramm {
             currentUser.setStatus(gutil.STATUS_HIDE);
             LOG.debug("STATUS_HIDE:");
             userDao.saveOrUpdate(currentUser);
-        } else if (command.cmd == gutil.MSG_DELIVERED) {
+        } else if (command.cmd == MSG_DELIVERED) {
             //Сообщени идентифицируется по ИД автора и ИД сообщения в системе автора (т.е. RowId)
             LOG.debug("MSG_DELIVERED id=" + command.dat);
             long msgRowID = command.dat;        // Номер доставленного сообщения в системе автора
             long msgAutorID = command.dat2;        // ИД автора сообщения / получателя нотификейшена
 
+            /**
+             *
+             * ТЕСТИТЬ как сохраняются и обновляются статусы сообщений
+             *
+             */
             // Удалить сообщение из списка недоставленных
             // TODO Переделать. Не надо удалять, надо помечать как доставленное
             User user = ctxChanel.channel().attr(NettyServer.USER).get();
-            user.removeMesagaById(msgAutorID, msgRowID);
-            sendOrSaveMsgStatus(msgAutorID, msgRowID, gutil.MSG_DELIVERED );
+            Mesage message = user.getMesagaById(msgAutorID, msgRowID);
+            if (message == null) {
+                LOG.warn("Delivered message whitc is not in user/ " + command);
+                return;
+            }
+            user.removeMesaga(message);
+            message.setStatus(MSG_DELIVERED);
+            mesagaDAO.saveMesaga(message);
+            sendOrSaveMsgStatus(msgAutorID, msgRowID, MSG_DELIVERED);
         } else if (command.cmd == gutil.MSG_READED) {
             LOG.debug("readed id=" + command.dat);
             long msgRowID = command.dat;        // Номер доставленного сообщения в системе автора
             long msgAutorID = command.dat2;        // ИД автора сообщения / получателя нотификейшена
-            sendOrSaveMsgStatus(msgAutorID, msgRowID, gutil.MSG_READED );
-        }else if (command.cmd == gutil.NOTIF_DELIVERED) {
+            sendOrSaveMsgStatus(msgAutorID, msgRowID, gutil.MSG_READED);
+        } else if (command.cmd == gutil.NOTIF_DELIVERED) {
             /*
             любое уведомление можно идентифицировать по Сообщению (автор + RowId) и Статусу
             автор - получатель уведомления (он же отправитель этого подтверждения), т.е. ссылка на него есть в текушем канале
@@ -77,14 +96,14 @@ public class UserCommand implements HandleTelegramm {
             // Удалить уведомление из списка недоставленных
             ctxChanel.channel().attr(NettyServer.USER).get().removeNotificById(notifRowID, notifStatus);
 
-        }  else {
+        } else {
             LOG.debug("Command not identyfired =" + command.cmd);
         }
 
 
     }
 
-    private void sendOrSaveMsgStatus(long recipientId, long msgRowID, int status ){
+    private void sendOrSaveMsgStatus(long recipientId, long msgRowID, int status) {
 
         // Отправить или сохранить Нотификейшн автору
         // Поиск Юзера получателя Нотификейшена - автора сообщения
@@ -115,32 +134,6 @@ public class UserCommand implements HandleTelegramm {
         CmdFromUser command = (CmdFromUser) packet;
         return command;
 
-    }
-
-
-    public UserDAO getUserDao() {
-        return userDao;
-    }
-
-    public void setUserDao(UserDAO userDao) {
-        this.userDao = userDao;
-    }
-
-    public HashMapDB getHashMapDB() {
-        return hashMapDB;
-    }
-
-    public void setHashMapDB(HashMapDB hashMapDB) {
-        this.hashMapDB = hashMapDB;
-    }
-
-
-    public NotificDAO getNotificDAO() {
-        return notificDAO;
-    }
-
-    public void setNotificDAO(NotificDAO notificDAO) {
-        this.notificDAO = notificDAO;
     }
 
 

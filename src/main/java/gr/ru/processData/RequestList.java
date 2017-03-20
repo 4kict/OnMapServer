@@ -10,10 +10,14 @@ import gr.ru.netty.protokol.Packs2Server.RequestPoints;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class RequestList implements HandleTelegramm {
 
     private static final Logger LOG = LogManager.getLogger(RequestList.class);
+    @Autowired
     private HashMapDB hashMapDB;
 
     @Override
@@ -56,14 +60,5 @@ public class RequestList implements HandleTelegramm {
 
 
     }
-
-    public HashMapDB getHashMapDB() {
-        return hashMapDB;
-    }
-
-    public void setHashMapDB(HashMapDB hashMapDB) {
-        this.hashMapDB = hashMapDB;
-    }
-
 
 }

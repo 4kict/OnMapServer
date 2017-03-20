@@ -17,16 +17,20 @@ import gr.ru.netty.protokol.Packs2Server.RegData;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
 import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
 
+@Component
 public class RegUser implements HandleTelegramm {
     private static final Logger LOG = LogManager.getLogger(RegUser.class);
-
+    @Autowired
     private UserDAO userDao;
+    @Autowired
     private HashMapDB hashMapDB;
     //private GeoDecoder geoDecoder;
 
@@ -212,23 +216,4 @@ public class RegUser implements HandleTelegramm {
         serverStat.dat = user.getId();
         ctxChanel.writeAndFlush(serverStat);
     }
-
-
-    public UserDAO getUserDao() {
-        return userDao;
-    }
-
-    public void setUserDao(UserDAO userDao) {
-        this.userDao = userDao;
-    }
-
-    public HashMapDB getHashMapDB() {
-        return hashMapDB;
-    }
-
-    public void setHashMapDB(HashMapDB hashMapDB) {
-        this.hashMapDB = hashMapDB;
-    }
-
-
 }

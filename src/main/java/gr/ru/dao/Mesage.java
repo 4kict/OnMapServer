@@ -35,6 +35,8 @@ public class Mesage extends MainEntity {
     @ManyToOne
     @JoinColumn(name = "recip_id")
     private User userRecipient;        // Получатель
+    @Column
+    private Integer status;            // Статус
 
 
     public Long getLocalRowId() {
@@ -86,11 +88,13 @@ public class Mesage extends MainEntity {
         this.autorId = autorId;
     }
 
-    @Override
-    public String toString() {
-        return "Mesage [mesaga=" + mesaga + ", autorId=" + autorId + ", msgType=" + msgType + " recipId=" + userRecipient.getId() + "]";
+    public Integer getStatus() {
+        return status;
     }
 
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
     public MsgToUser fillNettyPack(MsgToUser msgToUser) {
         msgToUser.from = this.autorId;

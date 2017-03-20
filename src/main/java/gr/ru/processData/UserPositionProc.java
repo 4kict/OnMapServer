@@ -9,11 +9,14 @@ import gr.ru.netty.protokol.Packs2Server.UserPosition;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UserPositionProc implements HandleTelegramm {
     private static final Logger LOG = LogManager.getLogger(UserPositionProc.class);
+    @Autowired
     private UserDAO userDao;
-
 
     @Override
     public void handle(ChannelHandlerContext ctxChanel, Packet packet) {
@@ -52,14 +55,5 @@ public class UserPositionProc implements HandleTelegramm {
         }
 
     }
-
-    public UserDAO getUserDao() {
-        return userDao;
-    }
-
-    public void setUserDao(UserDAO userDao) {
-        this.userDao = userDao;
-    }
-
 
 }

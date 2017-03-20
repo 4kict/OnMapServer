@@ -5,7 +5,7 @@
         <Mesage id="-222" autorId="-112" localRowId="77" mesaga="Just Some messAge" msgType="1" recip_id="-111" objVersion="1"/>
 
 
-    <!--<User  city="Numbai" country="nigeria" hashkey="9876543321" name="Lumumbu" objVersion="1"/>-->
+    <User id="-112" city="Numbai" country="nigeria" hashkey="9876543321" name="Lumumbu" objVersion="1"/>
 
 
 </dataset>

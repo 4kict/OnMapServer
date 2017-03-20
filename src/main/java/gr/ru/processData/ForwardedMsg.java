@@ -13,11 +13,15 @@ import io.netty.channel.ChannelHandlerContext;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ForwardedMsg implements HandleTelegramm {
     private static final Logger LOG = LogManager.getLogger(ForwardedMsg.class);
 
+    @Autowired
     private MesagaDAO mesagaDAO;
+    @Autowired
     private HashMapDB hashMapDB;
     @Autowired
     private UserDAO userDAO;
@@ -37,7 +41,14 @@ public class ForwardedMsg implements HandleTelegramm {
         Notific notifORM = sendNotific(ctxChanel, msgTelega.rowid, gutil.MSG_ONSERVER);
 
         // ищем получателя оповещения
-
+        User recipientUser = hashMapDB.getUser(msgTelega.to);        // Возможно НУЛЛ, будет проверено на этапе попытки отправить ему сообщение
+        if (recipientUser == null){
+            recipientUser = userDAO.getUser(msgTelega.to);
+        }
+        if (recipientUser == null){
+            LOG.warn("Recipient not found. " + msgTelega);
+            return;
+        }
 
         // Создаем новое сообщение из входящей телеграммы
         final Mesage msgORM = new Mesage();
@@ -46,23 +57,16 @@ public class ForwardedMsg implements HandleTelegramm {
         msgORM.setMesaga(msgTelega.msg);
         msgORM.setMsgType(msgTelega.msgtyp);
         msgORM.setTime(notifORM.getTime());
-        // Поиск Юзера получателя сообщение
-        User recipientUser = hashMapDB.getUser(msgTelega.to);        // Возможно НУЛЛ, будет проверено на этапе попытки отправить ему сообщение
         msgORM.setUserRecipient(recipientUser);
+        msgORM.setStatus(gutil.MSG_ONSERVER);
+        mesagaDAO.saveMesaga(msgORM);                    // сохраняем сообщение на сервере
 
-
-        //Получатель найден и вроде бы в сети
-        if (recipientUser != null && recipientUser.getMapChanel() != null && recipientUser.getMapChanel().isActive()) {
-
+        //Получатель OnLine
+        if (recipientUser.getMapChanel() != null && recipientUser.getMapChanel().isActive()) {
             recipientUser.getUnRecivedMsg().add(msgORM);        // Сохраняем сообщение в получателе
             // Создаем и тут же заполняем новый пакет
             MsgToUser msgNetty = msgORM.fillNettyPack((MsgToUser) PacketFactory.produce(PacketFactory.MSG_TO_USER));
             recipientUser.getMapChanel().writeAndFlush(msgNetty);        // Отправляем сообщение (БЕЗ слушателя)
-
-        }
-        // Получатель НЕ в сети
-        else {
-            mesagaDAO.saveMesaga(msgORM, msgTelega.to);                    // сохраняем сообщение на сервере
         }
 
     }
@@ -95,23 +99,5 @@ public class ForwardedMsg implements HandleTelegramm {
         }
 
     }
-
-
-    public MesagaDAO getMesagaDAO() {
-        return mesagaDAO;
-    }
-
-    public void setMesagaDAO(MesagaDAO mesagaDAO) {
-        this.mesagaDAO = mesagaDAO;
-    }
-
-    public HashMapDB getHashMapDB() {
-        return hashMapDB;
-    }
-
-    public void setHashMapDB(HashMapDB hashMapDB) {
-        this.hashMapDB = hashMapDB;
-    }
-
 
 }
