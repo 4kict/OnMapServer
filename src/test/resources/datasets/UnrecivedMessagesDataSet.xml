@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<dataset>
+    <User id="-111" city="Moskaw" country="russia" hashkey="123456789" name="Vasia" />
+    <Mesage id="-229" autorId="-112" localRowId="77" mesaga="Just Some messAge" msgType="1" recip_id="-111" objVersion="1"/>
+
+
+    <User id="-112" city="Numbai" country="nigeria" hashkey="-1031302084" name="Lumumbu" objVersion="1" lastGeoDecode="1"/>
+        <Mesage id="-221" autorId="-111" mesaga="msg1" recip_id="-112" status="906" objVersion="1" localRowId="10"/>
+        <Mesage id="-222" autorId="-111" mesaga="msg2" recip_id="-112" status="906" objVersion="1" localRowId="12"/>
+        <Mesage id="-223" autorId="-111" mesaga="msg3" recip_id="-112" status="908" objVersion="1" localRowId="13"/>
+        <Mesage id="-224" autorId="-111" mesaga="msg4" recip_id="-112" status="908" objVersion="1" localRowId="14"/>
+        <Mesage id="-225" autorId="-111" mesaga="msg5" recip_id="-112"              objVersion="1" localRowId="15"/>
+
+</dataset>

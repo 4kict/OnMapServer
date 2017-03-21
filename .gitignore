@@ -1,0 +1,22 @@
+#idea
+.idea/
+*.iml
+**/target/
+
+#git
+*.orig
+
+#activemq
+activemq-data/
+
+#maven
+**/dependency.txt
+*.versionsBackup
+
+#dbunit
+**/unitils-local.properties
+
+#Test generated
+employees.pdf
+
+logs/

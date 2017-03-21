@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<dataset>
+    <User id="-111" city="Moskaw" country="russia" hashkey="123456789" name="Vasia"/>
+    <Mesage id="-222" autorId="-112" localRowId="77" mesaga="Just Some messAge" msgType="1" recip_id="-111"/>
+
+
+    <User id="-112" city="Numbai" country="nigeria" hashkey="-1031302084" name="Lumumbu" />
+    <Mesage autorId="-111" mesaga="someMessage from Vasia to Mumbai" recip_id="-112" status="908"/>
+
+</dataset>

@@ -77,7 +77,7 @@ public class UserCommand implements HandleTelegramm {
             }
             user.removeMesaga(message);
             message.setStatus(MSG_DELIVERED);
-            mesagaDAO.saveMesaga(message);
+            mesagaDAO.saveMesaga(message);          //  обновленное сообещние
             sendOrSaveMsgStatus(msgAutorID, msgRowID, MSG_DELIVERED);
         } else if (command.cmd == gutil.MSG_READED) {
             LOG.debug("readed id=" + command.dat);

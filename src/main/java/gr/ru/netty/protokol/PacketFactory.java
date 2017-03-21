@@ -45,7 +45,7 @@ public class PacketFactory {
                 return new MsgFromUser(id);
             case CMD_FROM_USER:
                 //int asd = Packs2Server.TYPE_FLAG;
-                return new Packs2Server.CmdFromUser(id);
+                return new CmdFromUser(id);
             case REQ_USER_INFO:
                 return new ReqUserInfo(id);
             case FILE_FROM_USER:

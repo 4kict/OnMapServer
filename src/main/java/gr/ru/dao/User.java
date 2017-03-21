@@ -46,7 +46,7 @@ public class User extends MainEntity {
     private Short qad;       // Номер таблицы (Квадрат)
     @Column
     private Byte icon = 0;
-    @OneToMany(mappedBy = "userRecipient", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "userRecipient", cascade = CascadeType.ALL,  fetch = FetchType.EAGER)
     @Where(clause = "status = " + MSG_ONSERVER)
     private Set<Mesage> unRecivedMsg = new HashSet<Mesage>();
     @OneToMany(mappedBy = "userRecipient", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
@@ -158,7 +158,6 @@ public class User extends MainEntity {
 
     public void removeMesaga(Mesage msg) {
         if (msg != null) {
-            msg.setUserRecipient(null);
             this.unRecivedMsg.remove(msg);
         }
     }
