@@ -18,9 +18,9 @@ public class GeoDecoder extends Thread {
     private static final Logger LOG = LogManager.getLogger(GeoDecoder.class);
     long unic_id;
     double lat, lon;
-    private UserDAO userDao;
     private User user;
     private boolean bot = false;
+    private String key = "AIzaSyDaO8r_c5vmpxhqv9tFQWlKSkW5pr-ca4I";    // новый
 
 
 //	public GeoDecoder(int _unic_id, int _lat, int _lon) {
@@ -52,8 +52,6 @@ public class GeoDecoder extends Thread {
         // �������� �� ����������� ������ � �����
 
         String country = "", city = "", area = "", area2 = "";
-        //final String key = "AIzaSyAQQfyeNi9STBC8oZm0Bf19wU020hKE_zE";	//
-        final String key = "AIzaSyDaO8r_c5vmpxhqv9tFQWlKSkW5pr-ca4I";    // новый
 
         final String baseUrl = "https://maps.googleapis.com/maps/api/geocode/json?language=en&latlng=";
         String coord = lat + "," + lon;
@@ -61,6 +59,7 @@ public class GeoDecoder extends Thread {
         final String url = baseUrl + coord + "&key=" + key;
         LOG.trace(url);
         StringBuffer response = new StringBuffer();
+        long startTime = System.currentTimeMillis();
         try {
             final InputStream is = new URL(url).openStream();
             final BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
@@ -70,13 +69,13 @@ public class GeoDecoder extends Thread {
             }
             is.close();
             rd.close();
-
-
         } catch (Exception e) {
             LOG.error("google GeoDecoder error: \n" + e);
             e.printStackTrace();
         }
+        long stopTime = System.currentTimeMillis();
 
+        System.out.println("response: " + (stopTime - startTime));
 
         if (response.length() > 0) {
             Gson gson = new Gson();
@@ -131,16 +130,13 @@ public class GeoDecoder extends Thread {
     }
 
 
-    public UserDAO getUserDao() {
-        return userDao;
+    public String getKey() {
+        return key;
     }
 
-
-    public void setUserDao(UserDAO userDao) {
-        this.userDao = userDao;
+    public void setKey(String key) {
+        this.key = key;
     }
-
-
 }
 
 

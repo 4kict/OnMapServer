@@ -14,7 +14,7 @@ import org.unitils.spring.annotation.SpringApplicationContext;
 
 @SpringApplicationContext({"/unitTestContext.xml"})
 @Transactional(TransactionMode.DISABLED)
-public class AbstractUnitilsBaseTest extends UnitilsJUnit4 {
+public abstract class AbstractUnitilsBaseTest extends UnitilsJUnit4 {
 
     @Before
     public void init() {

@@ -107,7 +107,7 @@ public final class Packs2Server {
     public static class RegData extends Packet {
         public int sesion = 0;
         public String name = ""; // Логин
-        //public String locale = ""; //
+        public String locale = ""; //
         public long u_id; // Уникальный ID выданный сервером. - скорее всего ноль, иначе - юзер меняет рег данные
         public int an_id; // хэш от уникального ID андройда
         public int dev_id; // хэш от уникального ID устройства
@@ -131,10 +131,10 @@ public final class Packs2Server {
             byte[] nameBytes = new byte[nameLen];             // готовим массив байт
             buffer.readBytes(nameBytes);                      // читаем байты
             this.name = new String(nameBytes, Charset.forName("UTF-8")); // Перегоняем массив байт в строку
-//            short localeLen = buffer.readUnsignedByte();
-//            byte[] localeBytes = new byte[localeLen];
-//            buffer.readBytes(localeBytes);
-//            this.locale = new String(localeBytes, Charset.forName("UTF-8"));
+            short localeLen = buffer.readUnsignedByte();
+            byte[] localeBytes = new byte[localeLen];
+            buffer.readBytes(localeBytes);
+            this.locale = new String(localeBytes, Charset.forName("UTF-8"));
             this.u_id = buffer.readLong();
             this.an_id = buffer.readInt();
             this.dev_id = buffer.readInt();
@@ -154,10 +154,10 @@ public final class Packs2Server {
                     name.getBytes(Charset.forName("UTF-8")) : new byte[0];
             buffer.writeByte(nameBytes.length);
             buffer.writeBytes(nameBytes);
-//            byte[] localeBytes = (locale != null) ?
-//                    locale.getBytes(Charset.forName("UTF-8")) : new byte[0];
-//            buffer.writeByte(localeBytes.length);
-//            buffer.writeBytes(localeBytes);
+            byte[] localeBytes = (locale != null) ?
+                    locale.getBytes(Charset.forName("UTF-8")) : new byte[0];
+            buffer.writeByte(localeBytes.length);
+            buffer.writeBytes(localeBytes);
             buffer.writeLong(u_id);
             buffer.writeInt(an_id);
             buffer.writeInt(dev_id);
@@ -185,30 +185,11 @@ public final class Packs2Server {
                     + Byte.SIZE) / Byte.SIZE;
         }
 
-//        @Override
-//        public String toString() {
-//            return "RegData [name=" + name + ", locale=" + locale + ", u_id=" + u_id + ", an_id=" + an_id + ", dev_id=" + dev_id + ", key_id="
-//                    + key_id + ", lat=" + lat + ", lon=" + lon + ", status=" + status + ", ico=" + ico + ", qad=" + qad
-//                    + ", accur=" + accur + ", getLength()=" + getLength() + ", getId()=" + getId() + "]";
-//        }
-
-
         @Override
         public String toString() {
-            return MoreObjects.toStringHelper(this)
-                    .add("sesion", sesion)
-                    .add("name", name)
-                    .add("u_id", u_id)
-                    .add("an_id", an_id)
-                    .add("dev_id", dev_id)
-                    .add("key_id", key_id)
-                    .add("lat", lat)
-                    .add("lon", lon)
-                    .add("status", status)
-                    .add("ico", ico)
-                    .add("qad", qad)
-                    .add("accur", accur)
-                    .toString();
+            return "RegData [name=" + name + ", locale=" + locale + ", u_id=" + u_id + ", an_id=" + an_id + ", dev_id=" + dev_id + ", key_id="
+                    + key_id + ", lat=" + lat + ", lon=" + lon + ", status=" + status + ", ico=" + ico + ", qad=" + qad
+                    + ", accur=" + accur + ", getLength()=" + getLength() + ", getId()=" + getId() + "]";
         }
     }
 

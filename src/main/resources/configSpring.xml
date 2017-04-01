@@ -47,7 +47,6 @@
     <bean id="hashMapDB" class="gr.ru.HashMapDB"/>
 
     <bean id="geoDecoder" class="gr.ru.geocoder.GeoDecoder" scope="prototype">
-        <property name="userDao" ref="userDAO"/>
     </bean>
 
     <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>

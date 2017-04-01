@@ -90,6 +90,7 @@ public class RegUser implements HandleTelegramm {
                 user.setLon(regData.lon);
                 user.setQad(regData.qad);
                 user.setIcon((byte) regData.ico);
+                user.setLocale(regData.locale);
             }
 
 
@@ -116,6 +117,7 @@ public class RegUser implements HandleTelegramm {
                 user = new User();                            // Создем
                 user.setHashkey(hashKey);
                 user.setName(regData.name);
+                user.setLocale(regData.locale);
                 user.setLat(regData.lat);
                 user.setLon(regData.lon);
                 user.setQad(regData.qad);

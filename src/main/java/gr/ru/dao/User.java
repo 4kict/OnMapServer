@@ -39,6 +39,8 @@ public class User extends MainEntity {
     @Column
     private String city;        // Город
     @Column
+    private String locale;        // логин
+    @Column
     private Integer lat;        // Координаты
     @Column
     private Integer lon;
@@ -102,6 +104,14 @@ public class User extends MainEntity {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public String getLocale() {
+        return locale;
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
     }
 
     public Integer getLat() {
@@ -228,6 +238,13 @@ public class User extends MainEntity {
     }
 
 
+    public void setTrnslateMessage(String trnslateMessage) {
+
+    }
+
+    public String getTrnslateMessage() {
+        return null;
+    }
 }
 
 
