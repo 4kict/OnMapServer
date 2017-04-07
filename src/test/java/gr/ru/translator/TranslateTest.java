@@ -33,16 +33,16 @@ public class TranslateTest {
 
     @Test
     public void yandexTest() throws InterruptedException {
-        User user = new User();
-
-        new YandexTranslate().translate("ru", "en", RU_TEXT, user);
-        TimeUnit.SECONDS.sleep(4);
-
-        System.out.println( "====== yandex ============ \n" + user.getTrnslateMessage() );
-
-        new YandexTranslate().translate("en", "ru", user.getTrnslateMessage(), user);
-        TimeUnit.SECONDS.sleep(4);
-        System.out.println( "====== yandex ============ \n" + user.getTrnslateMessage() );
+//        User user = new User();
+//
+//        new YandexTranslate().translate("ru", "en", RU_TEXT, user);
+//        TimeUnit.SECONDS.sleep(4);
+//
+//        System.out.println( "====== yandex ============ \n" + user.getTrnslateMessage() );
+//
+//        new YandexTranslate().translate("en", "ru", user.getTrnslateMessage(), user);
+//        TimeUnit.SECONDS.sleep(4);
+//        System.out.println( "====== yandex ============ \n" + user.getTrnslateMessage() );
     }
 
 

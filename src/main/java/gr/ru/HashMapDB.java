@@ -69,7 +69,7 @@ public class HashMapDB {
             return;
 
         LOG.trace("usersHashMap.removeUser id=" + uId + " result=" + usersHashMap.remove(uId));
-        usersHashMap.remove(uId);
+        usersHashMap.remove(uId.toString());
     }
 
     public int size() {

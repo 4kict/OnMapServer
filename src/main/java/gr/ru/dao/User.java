@@ -236,15 +236,7 @@ public class User extends MainEntity {
                 + ", country=" + country + ", city=" + city + ", lat=" + lat + ", lon=" + lon + ", qad=" + qad
                 + ", icon=" + icon + " getId()=" + getId() + ", getObjVersion()=" + getObjVersion() + "]";
     }
-
-
-    public void setTrnslateMessage(String trnslateMessage) {
-
-    }
-
-    public String getTrnslateMessage() {
-        return null;
-    }
+    
 }
 
 

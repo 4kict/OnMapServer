@@ -2,12 +2,15 @@ package gr.ru.translator.impl;
 
 
 import gr.ru.dao.User;
+import gr.ru.netty.protokol.PacketFactory;
 import gr.ru.translator.Engine;
 import gr.ru.translator.Translator;
 import gr.ru.utils.TestHttpUtil;
 
 import java.util.ArrayList;
 import java.util.Map;
+
+import static gr.ru.netty.protokol.Packs2Client.MsgToUser;
 
 /**
  * Created by
@@ -20,13 +23,15 @@ public class YandexTranslate extends Thread implements Translator {
     private String from;
     private String to;
     private User user;
+    private MsgToUser msgToUser;
 
-    public void translate(String from, String to, String message, User user) {
-            this.encodedMessage = Engine.urlEncoder(message);
-            this.from = from;
-            this.to = to;
-            this.user = user;
-            this.start();
+    public void translate(String from, String to, String message, User user, MsgToUser msgToUser ) {
+        this.encodedMessage = Engine.urlEncoder(message);
+        this.from = from;
+        this.to = to;
+        this.user = user;
+        this.msgToUser = msgToUser;
+        this.start();
     }
 
     @Override
@@ -36,12 +41,14 @@ public class YandexTranslate extends Thread implements Translator {
                 "text=" + encodedMessage + "&" +
                 "lang=" + from + "-" + to);
         Map<String, Object> bodyAsJson = httpResponse.getBodyAsJson();
-
         if ((int) bodyAsJson.get("code") != 200) {
             //TODO LOG
             return;
         }
+        msgToUser.msg = (String) ((ArrayList) bodyAsJson.get("text")).get(0);
+        if (user.getMapChanel() != null && user.getMapChanel().isActive()) {
+            user.getMapChanel().writeAndFlush(msgToUser);        // Отправляем сообщение (БЕЗ слушателя)
+        }
 
-        user.setTrnslateMessage((String) ((ArrayList) bodyAsJson.get("text")).get(0));
     }
 }

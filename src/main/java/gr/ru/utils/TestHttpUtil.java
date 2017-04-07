@@ -15,11 +15,11 @@ import java.io.IOException;
 import java.util.*;
 
 import static com.google.common.base.Throwables.propagate;
-import static com.sun.deploy.util.StringUtils.join;
 import static gr.ru.utils.TestJsonUtil.jsonToMap;
 import static gr.ru.utils.TestJsonUtil.jsonToSimpleList;
 import static java.util.Collections.singletonMap;
 import static java.util.regex.Pattern.quote;
+import static org.apache.commons.lang3.StringUtils.join;
 import static org.apache.http.impl.client.HttpClients.createDefault;
 
 /**

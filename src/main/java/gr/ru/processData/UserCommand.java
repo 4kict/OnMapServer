@@ -1,5 +1,6 @@
 package gr.ru.processData;
 
+
 import gr.ru.HashMapDB;
 import gr.ru.dao.*;
 import gr.ru.gutil;
@@ -8,6 +9,7 @@ import gr.ru.netty.protokol.Packet;
 import gr.ru.netty.protokol.PacketFactory;
 import gr.ru.netty.protokol.Packs2Client.ServerStat;
 import gr.ru.netty.protokol.Packs2Server.CmdFromUser;
+import gr.ru.translator.Engine;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static gr.ru.gutil.MSG_DELIVERED;
+import static gr.ru.netty.protokol.Packs2Client.MsgToUser;
 
 @Component
 public class UserCommand implements HandleTelegramm {
@@ -28,6 +31,7 @@ public class UserCommand implements HandleTelegramm {
     @Autowired
     private HashMapDB hashMapDB;
 
+    private static Boolean translator = false;
 
     @Override
     public void handle(ChannelHandlerContext ctxChanel, Packet packet) {
@@ -61,14 +65,6 @@ public class UserCommand implements HandleTelegramm {
             LOG.debug("MSG_DELIVERED id=" + command.dat);
             long msgRowID = command.dat;        // Номер доставленного сообщения в системе автора
             long msgAutorID = command.dat2;        // ИД автора сообщения / получателя нотификейшена
-
-            /**
-             *
-             * ТЕСТИТЬ как сохраняются и обновляются статусы сообщений
-             *
-             */
-            // Удалить сообщение из списка недоставленных
-            // TODO Переделать. Не надо удалять, надо помечать как доставленное
             User user = ctxChanel.channel().attr(NettyServer.USER).get();
             Mesage message = user.getMesagaById(msgAutorID, msgRowID);
             if (message == null) {
@@ -95,6 +91,36 @@ public class UserCommand implements HandleTelegramm {
 
             // Удалить уведомление из списка недоставленных
             ctxChanel.channel().attr(NettyServer.USER).get().removeNotificById(notifRowID, notifStatus);
+
+        } else if (command.cmd == gutil.COMMAND_TRANSLATE) {
+            long msgRowID = command.dat;        // ИД строки в системе автора сообщения
+            long msgAuthorID = command.dat2;        // ИД автора сообщения
+
+            // Что бы узнать с какого языка надо переводить, ищем автора сообщения
+            User authorUser = hashMapDB.getUser(msgAuthorID);
+            if (authorUser == null) {
+                authorUser = userDao.getUser(msgAuthorID);
+            }
+            if (authorUser == null) {
+                LOG.warn("Trying to translate message from unrecognized author. " + command);
+                return;
+            }
+            if (authorUser.getLocale().equals(currentUser.getLocale())) {
+                LOG.warn("Trying to translate message from " + authorUser.getLocale() + " to " + currentUser.getLocale() );
+                return;
+            }
+            String originalMsg = mesagaDAO.getMessageTxt(msgRowID, msgAuthorID);
+            MsgToUser msgToUser = (MsgToUser) PacketFactory.produce(PacketFactory.MSG_TO_USER);
+            msgToUser.from = msgAuthorID;
+            msgToUser.msgtyp = gutil.MSG_TYP_TRANSLATE;
+            msgToUser.unicId = msgRowID;
+
+            if (translator) {
+                Engine.YANDEX.translate(authorUser.getLocale(), currentUser.getLocale(), originalMsg, currentUser, msgToUser);
+            } else {
+                Engine.MICROSOFT.translate(authorUser.getLocale(), currentUser.getLocale(), originalMsg, currentUser, msgToUser);
+            }
+            translator = !translator;
 
         } else {
             LOG.debug("Command not identyfired =" + command.cmd);

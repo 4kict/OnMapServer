@@ -1,9 +1,12 @@
 package gr.ru.dao;
 
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * Этот класс ничего не знает о авторе, но жестко связан с получателем
@@ -32,6 +35,20 @@ public class MesagaDAO {
         msgORM.setTime(System.currentTimeMillis());
         sessionFactory.getCurrentSession().saveOrUpdate(msgORM);
     }
+
+    @Transactional
+    public String getMessageTxt(long msgRowID, long msgAutorID) {
+        String hql = "from Mesage where localRowId=" + msgRowID + " and autorId=" + msgAutorID;
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+
+        @SuppressWarnings("unchecked")
+        List<Mesage> listMsg = (List<Mesage>) query.list();
+        if (listMsg != null && !listMsg.isEmpty()) {
+            return listMsg.get(0).getMesaga();
+        }
+        return null;
+    }
+
 
 //    @Transactional
 //    public void delete(Mesage msgORM) {

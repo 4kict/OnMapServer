@@ -38,7 +38,7 @@ public final class gutil {
 	
 	// Варианты комманд от клиента серверу
     public static final int COMMAND_NEW_CHAT		= 701; //
-
+	public static final int COMMAND_TRANSLATE 		= 703;
 
 
     // Варианты состояний сообщений
@@ -57,6 +57,7 @@ public final class gutil {
     public static final int MSG_TYP_TXT     		= 920; // текстовое сообщение
     public static final int MSG_TYP_FOTO      		= 922; // фотка
     //public static final int MSG_TYP_PREVIEW   		= 924; // превьюха
+	public static final int MSG_TYP_TRANSLATE 		= 926; // перевод
 	    
 
 	// Флаги которые могут придти от Сервика в Активити
@@ -68,7 +69,6 @@ public final class gutil {
 	// Флаги которые могут придти от Активити в Сервис
 	public static final int FLAG_ACTIVITYRESUME 	= 200; //
 	public static final int FLAG_ACTIVITYPAUSE 		= 202; //
-	// public static enum flags {Gri,Mash};
 
 	// Статусы клиента
 	public static final int STATUS_ACTIVE 			= 300;

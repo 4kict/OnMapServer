@@ -320,6 +320,7 @@ public final class Packs2Client {
         public String name = ""; // Логин
         public String country = "";
         public String local = "";
+        public String language = "";
         public long uid;
         public int lat;
         public int lon;
@@ -347,6 +348,11 @@ public final class Packs2Client {
             byteArr = new byte[localLen];                    // готовим массив байт
             buffer.readBytes(byteArr);                      // читаем байты
             this.local = new String(byteArr, Charset.forName("UTF-8")); // Перегоняем массив байт в строку
+            // language
+            short langLen = buffer.readUnsignedByte();      // длина
+            byteArr = new byte[langLen];                    // готовим массив байт
+            buffer.readBytes(byteArr);                      // читаем байты
+            this.language = new String(byteArr, Charset.forName("UTF-8")); // Перегоняем массив байт в строку
 
             this.uid = buffer.readLong();
             this.lat = buffer.readInt();
@@ -368,6 +374,10 @@ public final class Packs2Client {
             buffer.writeByte(byteArr.length);
             buffer.writeBytes(byteArr);
 
+            byteArr = language.getBytes(Charset.forName("UTF-8"));
+            buffer.writeByte(byteArr.length);
+            buffer.writeBytes(byteArr);
+
             buffer.writeLong(uid);
             buffer.writeInt(lat);
             buffer.writeInt(lon);
@@ -380,12 +390,15 @@ public final class Packs2Client {
             int lenName = (name == null) ? 0 : name.getBytes(Charset.forName("UTF-8")).length;
             int lenCountry = (country == null) ? 0 : country.getBytes(Charset.forName("UTF-8")).length;
             int lenLocal = (local == null) ? 0 : local.getBytes(Charset.forName("UTF-8")).length;
+            int lenLang = (language == null) ? 0 : language.getBytes(Charset.forName("UTF-8")).length;
             return (Byte.SIZE
                     + (Byte.SIZE * lenName)
                     + Byte.SIZE
                     + (Byte.SIZE * lenCountry)
                     + Byte.SIZE
                     + (Byte.SIZE * lenLocal)
+                    + Byte.SIZE
+                    + (Byte.SIZE * lenLang)
                     + Long.SIZE
                     + Integer.SIZE
                     + Integer.SIZE
@@ -394,7 +407,7 @@ public final class Packs2Client {
 
         @Override
         public String toString() {
-            return "UserInfo [name=" + name + ", country=" + country + ", local=" + local + ", uid=" + uid + ", lat=" + lat
+            return "UserInfo [name=" + name + ", country=" + country + ", local=" + local + ", language=" + language + ", uid=" + uid + ", lat=" + lat
                     + ", lon=" + lon + ", stat=" + stat + ", getLength()=" + getLength() + ", getId()=" + getId() + "]";
         }
     }

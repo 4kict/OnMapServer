@@ -2,6 +2,7 @@ package gr.ru.translator.impl;
 
 import com.google.common.collect.ImmutableMap;
 import gr.ru.dao.User;
+import gr.ru.netty.protokol.PacketFactory;
 import gr.ru.translator.Engine;
 import gr.ru.translator.Translator;
 import gr.ru.utils.SaxParser;
@@ -10,8 +11,10 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-
+import java.util.ArrayList;
 import java.util.Map;
+
+import static gr.ru.netty.protokol.Packs2Client.MsgToUser;
 
 /**
  * Created by
@@ -32,6 +35,7 @@ public class MicrosoftTranslate extends Thread implements Translator {
     private String from;
     private String to;
     private User user;
+    private MsgToUser msgToUser;
 
 
     private synchronized void updateToken() {
@@ -49,7 +53,7 @@ public class MicrosoftTranslate extends Thread implements Translator {
 
 
     @Override
-    public void translate(String from, String to, String message, User user) {
+    public void translate(String from, String to, String message, User user, MsgToUser msgToUser) {
         if (tokenTime + tokenIncrement < System.currentTimeMillis()) {
             updateToken();
         }
@@ -58,6 +62,7 @@ public class MicrosoftTranslate extends Thread implements Translator {
         this.from = from;
         this.to = to;
         this.user = user;
+        this.msgToUser = msgToUser;
         this.start();
 
     }
@@ -70,7 +75,10 @@ public class MicrosoftTranslate extends Thread implements Translator {
                 "from=" + from + "&" +
                 "to=" + to);
 
-        user.setTrnslateMessage(SaxParser.INSTANCE.parse(httpResponse.getBody(), "string"));
+        msgToUser.msg = SaxParser.INSTANCE.parse(httpResponse.getBody(), "string");
+        if (user.getMapChanel() != null && user.getMapChanel().isActive()) {
+            user.getMapChanel().writeAndFlush(msgToUser);        // Отправляем сообщение (БЕЗ слушателя)
+        }
     }
 
 
