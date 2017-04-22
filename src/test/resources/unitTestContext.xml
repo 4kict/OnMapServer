@@ -44,7 +44,7 @@
 
     <bean id="mapServerHandler" class="gr.ru.netty.MapServerHandler" scope="prototype"/>
 
-    <bean id="hashMapDB" class="gr.ru.HashMapDB"/>
+    <bean id="hashMapDB" class="gr.ru.HashMapDB.HashMapDB"/>
 
     <bean id="geoDecoder" class="gr.ru.geocoder.GeoDecoder" scope="prototype">
         <property name="userDao" ref="userDAO"/>

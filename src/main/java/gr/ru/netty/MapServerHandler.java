@@ -75,7 +75,7 @@ public class MapServerHandler extends SimpleChannelInboundHandler<Packet> {
                 forwardFile.handle(ctx, packet);
                 break;
             case PacketFactory.PING:
-                //LOG.trace("Ping ");
+                LOG.trace("Ping ");
                 break;
 
             default:

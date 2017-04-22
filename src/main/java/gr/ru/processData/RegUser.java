@@ -1,7 +1,7 @@
 package gr.ru.processData;
 
 import gr.ru.ApplicationContextUtils;
-import gr.ru.HashMapDB;
+import gr.ru.HashMapDB.HashMapDB;
 import gr.ru.dao.Mesage;
 import gr.ru.dao.Notific;
 import gr.ru.dao.User;
@@ -217,5 +217,6 @@ public class RegUser implements HandleTelegramm {
         serverStat.sts = ctxChanel.channel().attr(NettyServer.SESSION).get();
         serverStat.dat = user.getId();
         ctxChanel.writeAndFlush(serverStat);
+        System.out.println("registrationAccept");
     }
 }

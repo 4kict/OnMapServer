@@ -1,6 +1,6 @@
 package gr.ru.processData;
 
-import gr.ru.HashMapDB;
+import gr.ru.HashMapDB.HashMapDB;
 import gr.ru.dao.User;
 import gr.ru.dao.UserDAO;
 import gr.ru.netty.protokol.Packet;

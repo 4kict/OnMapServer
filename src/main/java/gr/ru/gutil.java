@@ -17,25 +17,25 @@ public final class gutil {
 	public static final int TYPE_DATATOCLIENT 		= 4; // Тип Данные клиенту
 	public static final int TYPE_USERCHARACTER 		= 6; // Тип Данные клиенту
 	public static final int TYPE_DATA 				= 98; // Тип Данные клиенту
-	
+
 	// Типы данных которыми могут обмениваться Клиент и Сервер
 	public static final int TYPE_REGISTRATION 		= 601; // Тип Флаг
-	public static final int TYPE_REQUEST 			= 602; // 
-	public static final int TYPE_POSITION 			= 603; // 
-	public static final int TYPE_COMMAND 			= 604; // 
-	public static final int TYPE_MAPPOINT			= 605; // 
-	public static final int TYPE_USERINFO 			= 606; //  
+	public static final int TYPE_REQUEST 			= 602; //
+	public static final int TYPE_POSITION 			= 603; //
+	public static final int TYPE_COMMAND 			= 604; //
+	public static final int TYPE_MAPPOINT			= 605; //
+	public static final int TYPE_USERINFO 			= 606; //
     public static final int TYPE_MESSAGE 			= 609; //
     public static final int TYPE_FOTO    			= 610; //
     public static final int TYPE_REQUSERINFO		= 611; //
     public static final int TYPE_GETUSERINFO		= 613; //
-    
-    
-	public static final int SC_REGACCEPT 			= 615; // Статус. Применяется только как подтверждение регистрации, совместно с SERVER_REG_ACCEPT. - ЧУШЬ надо избавиться от SERVER_REG_ACCEPT  
+
+
+	public static final int SC_REGACCEPT 			= 615; // Статус. Применяется только как подтверждение регистрации, совместно с SERVER_REG_ACCEPT. - ЧУШЬ надо избавиться от SERVER_REG_ACCEPT
 //	public static final int SC_MSGRECIVED 			= 617; // Соощение доставлено и ему присвоен номер
 //	public static final int SC_MSGDELIVERED 			= 619; // Соощение доставлено и ему присвоен номер
 	public static final int SC_MSGSTATUS			= 621; // Статус сообщения
-	
+
 	// Варианты комманд от клиента серверу
     public static final int COMMAND_NEW_CHAT		= 701; //
 	public static final int COMMAND_TRANSLATE 		= 703;
@@ -58,7 +58,7 @@ public final class gutil {
     public static final int MSG_TYP_FOTO      		= 922; // фотка
     //public static final int MSG_TYP_PREVIEW   		= 924; // превьюха
 	public static final int MSG_TYP_TRANSLATE 		= 926; // перевод
-	    
+
 
 	// Флаги которые могут придти от Сервика в Активити
 	public static final int FLAG_SERVEROFF 			= 100; //
@@ -109,6 +109,21 @@ public final class gutil {
 	private static final char[] posLetters = { 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Z' };
 	private static final int[] posDegrees = { 0, 8, 16, 24, 32, 40, 48, 56, 64, 72, 84 };
 
+	public static short getLonQad(int longitude){
+		return getLongQad((double) longitude / 1000000.0D);
+	}
+
+	public static short getLatQad(int latitude){
+		double lat = (double) latitude / 1000000.0D;
+		double latZone = 0.0D;
+		if (lat < 0.0D) {
+			latZone = (90.0D + lat) / 8.0D + 1.0D;
+		} else {
+			latZone = lat / 8.0D + 11.0D;
+		}
+		return (short)latZone;
+	}
+
 	private static short getLongQad(double longitude){
 		double longZone = 0.0D;
 		if (longitude < 0.0D) {
@@ -151,8 +166,8 @@ public final class gutil {
 		if (latIndex == -1) {
 			latIndex = 0;
 		}
-		
-		
+
+
 		if (lat >= 0) {
 			if (latIndex == -2) {
 				latIndex = posLetters.length - 1;
@@ -177,53 +192,3 @@ public final class gutil {
 
 
 
-
-//
-//class UUIDgr
-//{
-// private final String hash;
-// private final long least;
-// private final long most;
-// private final UUIDserializ uuidSer = new UUIDserializ();
-//
-// UUIDgr(long _l, long _m)
-// {
-// UUID uuid_tmp = new UUID(_m, _l);
-// this.hash = uuid_tmp.toString();
-// this.least = uuid_tmp.getLeastSignificantBits();
-// this.most = uuid_tmp.getMostSignificantBits();
-// this.uuidSer.hash = this.hash;
-// this.uuidSer.least = this.least;
-// this.uuidSer.most = this.most;
-// uuid_tmp = null;
-// }
-//
-// String getHash()
-// {
-// return this.hash;
-// }
-//
-// long getLeast()
-// {
-// return this.least;
-// }
-//
-// long getMost()
-// {
-// return this.most;
-// }
-//
-// UUIDserializ getSerializ()
-// {
-// return this.uuidSer;
-// }
-//}
-//
-//
-//
-//class UUIDserializ
-//{
-// public String hash;
-// public long least;
-// public long most;
-//}

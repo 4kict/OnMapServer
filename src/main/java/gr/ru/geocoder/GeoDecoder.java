@@ -20,8 +20,8 @@ public class GeoDecoder extends Thread {
     double lat, lon;
     private User user;
     private boolean bot = false;
-    private String key = "AIzaSyBggZQG7bUv_eZpvxRp_8IsMhGgl_wuNxU";    // тестовый ключ
-    //private String key = "AIzaSyDaO8r_c5vmpxhqv9tFQWlKSkW5pr-ca4I";    // новый
+    //private String key = "AIzaSyBggZQG7bUv_eZpvxRp_8IsMhGgl_wuNxU";    // тестовый ключ
+    private String key = "AIzaSyDaO8r_c5vmpxhqv9tFQWlKSkW5pr-ca4I";    // новый
 
 
 //	public GeoDecoder(int _unic_id, int _lat, int _lon) {

@@ -1,6 +1,6 @@
 package gr.ru.processData;
 
-import gr.ru.HashMapDB;
+import gr.ru.HashMapDB.HashMapDB;
 import gr.ru.dao.MesagaDAO;
 import gr.ru.dao.Mesage;
 import gr.ru.dao.Notific;

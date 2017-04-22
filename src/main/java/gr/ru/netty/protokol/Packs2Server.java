@@ -1,6 +1,5 @@
 package gr.ru.netty.protokol;
 
-import com.google.common.base.MoreObjects;
 import io.netty.buffer.ByteBuf;
 
 import java.nio.charset.Charset;
@@ -173,12 +172,12 @@ public final class Packs2Server {
         @Override
         public int getLength() {
             int lenName = (name == null) ? 0 : name.getBytes(Charset.forName("UTF-8")).length;
-            //int lenLocale = (locale == null) ? 0 : locale.getBytes(Charset.forName("UTF-8")).length;
+            int lenLocale = (locale == null) ? 0 : locale.getBytes(Charset.forName("UTF-8")).length;
             return (Integer.SIZE
                     + Byte.SIZE
                     + (Byte.SIZE * lenName)
                     + Byte.SIZE
-                   // + (Byte.SIZE * lenLocale)
+                    + (Byte.SIZE * lenLocale)
                     + Long.SIZE
                     + (Integer.SIZE * 5)
                     + (Short.SIZE * 3)

@@ -1,6 +1,6 @@
 package gr.ru.processData;
 
-import gr.ru.HashMapDB;
+import gr.ru.HashMapDB.HashMapDB;
 import gr.ru.dao.User;
 import gr.ru.netty.protokol.Packet;
 import gr.ru.netty.protokol.PacketFactory;
@@ -30,7 +30,7 @@ public class RequestList implements HandleTelegramm {
             return;
         }
 
-        User[] users = hashMapDB.getListOfUsers();
+        User[] users = hashMapDB.getAllUsers();
         PointArray pointsArr = (PointArray) PacketFactory.produce(PacketFactory.POINT_ARRAY);
         pointsArr.points = new MapPoint[users.length];
         for (int i = 0; i < users.length; i++) {
