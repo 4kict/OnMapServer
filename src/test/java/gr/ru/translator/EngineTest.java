@@ -1,6 +1,9 @@
 package gr.ru.translator;
 
 import gr.ru.dao.User;
+import gr.ru.gutil;
+import gr.ru.netty.protokol.PacketFactory;
+import gr.ru.netty.protokol.Packs2Client;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -24,10 +27,16 @@ public class EngineTest {
 //    }
 //
 //
-//    @Test
-//    public void microsoftTranslate() throws InterruptedException {
-//        User user1 = new User();
-//        Engine.MICROSOFT.translate("ru", "en", "БОльШой пес", user1);
+    @Test
+    public void microsoftTranslate() throws InterruptedException {
+
+        Packs2Client.MsgToUser msgToUser = (Packs2Client.MsgToUser) PacketFactory.produce(PacketFactory.MSG_TO_USER);
+        msgToUser.from = 1;
+        msgToUser.msgtyp = gutil.MSG_TYP_TRANSLATE;
+        msgToUser.unicId = 2;
+
+        User user1 = new User();
+        Engine.MICROSOFT.translate("ru", "en", "БОльШой пес", user1, msgToUser);
 //        User user2 = new User();
 //        Engine.MICROSOFT.translate("ru", "en", "БОльШой кот", user2);
 //        User user3 = new User();
@@ -40,6 +49,6 @@ public class EngineTest {
 //        Assert.assertEquals("Big cat", user2.getTrnslateMessage());
 //        Assert.assertEquals("Little doggy", user3.getTrnslateMessage());
 //        Assert.assertEquals("Small cat", user4.getTrnslateMessage());
-//
-//    }
+
+    }
 }

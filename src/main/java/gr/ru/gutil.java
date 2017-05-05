@@ -11,6 +11,8 @@ public final class gutil {
 	public static final String BROADCAST_ACTION = "ge.griMap.servicebackbroadcast";
 
 	public static final int SETUP_SIZEOF_PICE 		= 100 * 1024; // Максимальный размер кусочка файла, в байтах
+	public static final int SETUP_CLUSTERS_IN_VIEW 		= 20; // Максимальная выборка кластеров
+	public static final int SETUP_POINTS_IN_VIEW 		= 30; // Сколько максимум возращать точек в одном ответе
 
 	// Типы данных которыми могут обмениваться Сервис и Активити
 	public static final int TYPE_FLAG 				= 2; // Тип Флаг
@@ -109,20 +111,6 @@ public final class gutil {
 	private static final char[] posLetters = { 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Z' };
 	private static final int[] posDegrees = { 0, 8, 16, 24, 32, 40, 48, 56, 64, 72, 84 };
 
-	public static short getLonQad(int longitude){
-		return getLongQad((double) longitude / 1000000.0D);
-	}
-
-	public static short getLatQad(int latitude){
-		double lat = (double) latitude / 1000000.0D;
-		double latZone = 0.0D;
-		if (lat < 0.0D) {
-			latZone = (90.0D + lat) / 8.0D + 1.0D;
-		} else {
-			latZone = lat / 8.0D + 11.0D;
-		}
-		return (short)latZone;
-	}
 
 	private static short getLongQad(double longitude){
 		double longZone = 0.0D;
@@ -134,7 +122,7 @@ public final class gutil {
 		return (short)longZone;
 	}
 
-	public static short getLatQad(double latitude){
+	private static short getLatQad(double latitude){
 		int latIndex = -2;
 		int lat = (int)latitude;
 		if (lat >= 0){

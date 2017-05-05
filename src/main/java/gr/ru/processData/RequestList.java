@@ -24,13 +24,13 @@ public class RequestList implements HandleTelegramm {
     public void handle(ChannelHandlerContext ctxChanel, Packet packet) {
 
         // Преобразование и проверка данных
-        RequestPoints rqstTel = validTele(packet);
-        if (rqstTel == null) {
-            LOG.error("Validation of Rqst - ERR");
+        RequestPoints requestPoints = validTele(packet);
+        if (requestPoints == null) {
+            LOG.error("Validation of RequestPoints - ERR");
             return;
         }
 
-        User[] users = hashMapDB.getAllUsers();
+        User[] users = hashMapDB.getFromCluster(requestPoints.nx, requestPoints.ny, requestPoints.sx, requestPoints.sy);
         PointArray pointsArr = (PointArray) PacketFactory.produce(PacketFactory.POINT_ARRAY);
         pointsArr.points = new MapPoint[users.length];
         for (int i = 0; i < users.length; i++) {
