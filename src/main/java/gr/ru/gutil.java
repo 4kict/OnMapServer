@@ -11,8 +11,8 @@ public final class gutil {
 	public static final String BROADCAST_ACTION = "ge.griMap.servicebackbroadcast";
 
 	public static final int SETUP_SIZEOF_PICE 		= 100 * 1024; // Максимальный размер кусочка файла, в байтах
-	public static final int SETUP_CLUSTERS_IN_VIEW 		= 20; // Максимальная выборка кластеров
-	public static final int SETUP_POINTS_IN_VIEW 		= 30; // Сколько максимум возращать точек в одном ответе
+	public static final int SETUP_CLUSTERS_IN_VIEW 		= 50; // Максимальная выборка кластеров
+	public static final int SETUP_POINTS_IN_VIEW 		= 50; // Сколько максимум возращать точек в одном ответе
 
 	// Типы данных которыми могут обмениваться Сервис и Активити
 	public static final int TYPE_FLAG 				= 2; // Тип Флаг
