@@ -49,15 +49,21 @@ public class UserCommand implements HandleTelegramm {
             // Юзер активен
             currentUser.setStatus(gutil.STATUS_ACTIVE);
             LOG.debug("STATUS_ACTIVE:");
+            hashMapDB.activateUser(currentUser.getId());
             userDao.saveOrUpdate(currentUser);
-        } else if (command.cmd == gutil.STATUS_PAUSE) {
-            // Юзер в паузе  // НЕ используется
-            currentUser.setStatus(gutil.STATUS_PAUSE);
-            LOG.debug("STATUS_PAUSE:");
-            userDao.saveOrUpdate(currentUser);
-        } else if (command.cmd == gutil.STATUS_HIDE) {
+        }
+//        // Статус Пауза перетирает стату Спрятан.
+//        // И серверу не обазательно знать о паузе
+//        else if (command.cmd == gutil.STATUS_PAUSE) {
+//            // Юзер в паузе  // НЕ используется
+//            currentUser.setStatus(gutil.STATUS_PAUSE);
+//            LOG.debug("STATUS_PAUSE:");
+//            userDao.saveOrUpdate(currentUser);
+//        }
+        else if (command.cmd == gutil.STATUS_HIDE) {
             // Юзер желает скрыться с карты
             currentUser.setStatus(gutil.STATUS_HIDE);
+            hashMapDB.deactiveUser(currentUser.getId());
             LOG.debug("STATUS_HIDE:");
             userDao.saveOrUpdate(currentUser);
         } else if (command.cmd == MSG_DELIVERED) {
@@ -106,7 +112,7 @@ public class UserCommand implements HandleTelegramm {
                 return;
             }
             if (authorUser.getLocale().equals(currentUser.getLocale())) {
-                LOG.warn("Trying to translate message from " + authorUser.getLocale() + " to " + currentUser.getLocale() );
+                LOG.warn("Trying to translate message from " + authorUser.getLocale() + " to " + currentUser.getLocale());
                 return;
             }
             String originalMsg = mesagaDAO.getMessageTxt(msgRowID, msgAuthorID);

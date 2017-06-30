@@ -1,6 +1,7 @@
 package gr.ru.HashMapDB;
 
 import gr.ru.dao.User;
+import gr.ru.gutil;
 
 import java.util.Random;
 import java.util.UUID;
@@ -10,13 +11,13 @@ import java.util.UUID;
  */
 // Строитель ботов
 class BotBuilder {
-    private Long hashkey = new Random().nextLong();
     private String name = UUID.randomUUID().toString();        // логин
     private String country = UUID.randomUUID().toString();        // Страна
     private String city = UUID.randomUUID().toString();        // Город
     private String lang = "en";        // язык
     private Integer lat = 0;        // Координаты
     private Integer lon = 0;
+    private Integer status = gutil.STATUS_HIDE;
 
     public BotBuilder setName(String name) {
         this.name = name;
@@ -59,13 +60,14 @@ class BotBuilder {
         User bot = new User();
         long id = new Random().nextLong();
         bot.setId(id < 0 ? id * -1 : id);
-        bot.setHashkey(hashkey);
+        bot.setHashkey( new Random().nextLong());
         bot.setName(name);
         bot.setCountry(country);
         bot.setCity(city);
         bot.setLocale(lang);
         bot.setLat(lat);
         bot.setLon(lon);
+        bot.setStatus(status);
         bot.bot = true;
         return bot;
     }

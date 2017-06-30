@@ -1,18 +1,19 @@
 package gr.ru.HashMapDB;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import gr.ru.MyApp;
 import gr.ru.dao.User;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import static gr.ru.gutil.SETUP_CLUSTERS_IN_VIEW;
 import static gr.ru.gutil.SETUP_POINTS_IN_VIEW;
+import static gr.ru.gutil.STATUS_ACTIVE;
 import static java.lang.String.format;
 
 
@@ -21,7 +22,9 @@ public class HashMapDB {
     private static final Logger LOG = LogManager.getLogger(MyApp.class);
     //private HashSet<User> usersHashSet = new HashSet<User>();
 
+    // Мэпа юзеров для поиска по ID. для чата
     private HashMap<String, User> usersHashMap = new HashMap<>();
+    // Мэпа кластеров. В кластере только Активные юзеры
     private HashMap<String, List<User>> userClusters = new HashMap<>();
 
     public HashMapDB() {
@@ -67,14 +70,20 @@ public class HashMapDB {
     }
 
 
-    private User[] getAllUsers() {
-        if (usersHashMap.size() > SETUP_POINTS_IN_VIEW) {
-            // 130мс на 1000000 юзеров на HP4530s
-            List<User> allUsers = new ArrayList<>(usersHashMap.values());
-            Collections.shuffle(allUsers);
-            return allUsers.subList(0, SETUP_POINTS_IN_VIEW).toArray(new User[SETUP_POINTS_IN_VIEW]);
+    private User[] getAllActiveUsers() {
+        List<User> visibleUsers = Lists.newArrayList(Iterables.filter(usersHashMap.values(), new Predicate<User>() {
+            @Override
+            public boolean apply(User input) {
+                return input.getStatus()==STATUS_ACTIVE;
+            }
+        }));
+
+        if (visibleUsers.size() > SETUP_POINTS_IN_VIEW) {
+            Collections.shuffle(visibleUsers);
+            return visibleUsers.subList(0, SETUP_POINTS_IN_VIEW).toArray(new User[SETUP_POINTS_IN_VIEW]);
         }
-        return usersHashMap.values().toArray(new User[usersHashMap.size()]);
+        return visibleUsers.toArray(new User[visibleUsers.size()]);
+
     }
 
 
@@ -96,7 +105,7 @@ public class HashMapDB {
         }
         // Если в область видисости слишком много кластеров, вернем всех
         if (totalClusters > SETUP_CLUSTERS_IN_VIEW) {
-            return getAllUsers();
+            return getAllActiveUsers();
         }
         List<String> clusterNames = Cluster.getNames(neLat, neLon, swLat, swLon);
         List<User> usersFromClusters = new ArrayList<>();
@@ -114,6 +123,28 @@ public class HashMapDB {
         return usersFromClusters.toArray(new User[usersFromClusters.size()]);
     }
 
+    public void activateUser(Long uId){
+        User userToActive = usersHashMap.get(uId.toString());
+        String clusterName = Cluster.calcName(userToActive.getLat(), userToActive.getLon());
+        List<User> usersList = userClusters.get(clusterName);
+        if (usersList == null) {
+            usersList = new ArrayList<>();
+            userClusters.put(clusterName, usersList);
+        }
+        usersList.add(userToActive);
+    }
+
+    public void deactiveUser(Long uId){
+        User userToRemove = usersHashMap.get(uId.toString());
+        List<User> usersList = userClusters.get(Cluster.calcName(userToRemove.getLat(), userToRemove.getLon()));
+        if (usersList == null) {
+            LOG.warn("There is no cluster '" + Cluster.calcName(userToRemove.getLat(), userToRemove.getLon()) + "' for user to delete with id=" + uId);
+            return;
+        }
+        if (!usersList.remove(userToRemove)) {
+            LOG.warn("There is no user to delete with id=" + uId + " in user cluster '" + Cluster.calcName(userToRemove.getLat(), userToRemove.getLon()) + "'");
+        }
+    }
 
     public void removeUser(Long uId) {
         if (uId < 1) {
