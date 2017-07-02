@@ -23,6 +23,7 @@ public class GeoDecoder extends Thread {
     //private String key = "AIzaSyBggZQG7bUv_eZpvxRp_8IsMhGgl_wuNxU";    // тестовый ключ
     private String key = "AIzaSyDaO8r_c5vmpxhqv9tFQWlKSkW5pr-ca4I";    // новый
 
+    private static Gson GSON = new Gson();
 
 //	public GeoDecoder(int _unic_id, int _lat, int _lon) {
 //		unic_id = _unic_id;
@@ -79,8 +80,8 @@ public class GeoDecoder extends Thread {
         System.out.println("response: " + (stopTime - startTime));
 
         if (response.length() > 0) {
-            Gson gson = new Gson();
-            GeoCoderResponse googlResponse = gson.fromJson(response.toString(), GeoCoderResponse.class);
+
+            GeoCoderResponse googlResponse = GSON.fromJson(response.toString(), GeoCoderResponse.class);
 
             if ("OK".equals(googlResponse.status)) {
                 GeoCoderResponse.address_component[] addresParts = googlResponse.results[0].address_components;

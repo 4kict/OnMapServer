@@ -170,5 +170,11 @@ public class HashMapDB {
         return usersHashMap.size();
     }
 
+    public HashMap<String, User> getUsersHashMap() {
+        return usersHashMap;
+    }
 
+    public HashMap<String, List<User>> getUserClusters() {
+        return userClusters;
+    }
 }

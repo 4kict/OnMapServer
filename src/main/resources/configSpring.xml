@@ -3,10 +3,11 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
-		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 
     <aop:aspectj-autoproxy proxy-target-class="true"/>
     <tx:annotation-driven transaction-manager="txManager"/>
@@ -14,11 +15,11 @@
     <context:component-scan base-package="gr.ru.dao"/>
 
     <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
-    <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-    <!--<property name="url" value="jdbc:mysql://localhost:3306/gridb?useUnicode=true&amp;characterEncoding=utf8mb4"/>-->
-    <property name="url" value="jdbc:mysql://localhost:3306/gridb?useUnicode=true"/>
-    <property name="username" value="grisha"/>
-    <property name="password" value="MashGrish"/>
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <!--<property name="url" value="jdbc:mysql://localhost:3306/gridb?useUnicode=true&amp;characterEncoding=utf8mb4"/>-->
+        <property name="url" value="jdbc:mysql://localhost:3306/gridb?useUnicode=true"/>
+        <property name="username" value="grisha"/>
+        <property name="password" value="MashGrish"/>
     </bean>
 
     <!--<bean id="dataSource" class="org.unitils.database.UnitilsDataSourceFactoryBean"/>-->
@@ -51,9 +52,13 @@
 
     <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
 
-    <bean id="applicationContextUtils" class="gr.ru.ApplicationContextUtils" />
+    <bean id="applicationContextUtils" class="gr.ru.ApplicationContextUtils"/>
 
     <bean id="logerAop" class="gr.ru.LoggerAOP"/>
+
+    <task:annotation-driven/>
+    <bean id="scheduler" class="gr.ru.utils.Scheduler">
+    </bean>
 
 </beans>
 
