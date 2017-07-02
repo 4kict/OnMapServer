@@ -1,5 +1,7 @@
 package gr.ru.dao;
 
+import com.google.gson.annotations.Expose;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -18,6 +20,7 @@ public class MainEntity implements Serializable {
     @Id
     @GeneratedValue
     @Column(name = "id")
+    @Expose
     protected Long id = NULL_LONG;
 
     @Version

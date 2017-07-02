@@ -23,7 +23,10 @@ public class Scheduler {
 
     private static final Logger LOG = LogManager.getLogger(MyApp.class);
 
-    private static final Gson GSON = new GsonBuilder().create();
+    private static final Gson GSON = new GsonBuilder()
+            .excludeFieldsWithoutExposeAnnotation()
+            .setPrettyPrinting()
+            .create();
 
     private static final String mapPath;
     private static final String clusterPath;

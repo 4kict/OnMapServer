@@ -25,7 +25,7 @@ public class HashMapDB {
     // Мэпа юзеров для поиска по ID. для чата
     private HashMap<String, User> usersHashMap = new HashMap<>();
     // Мэпа кластеров. В кластере только Активные юзеры
-    private HashMap<String, List<User>> userClusters = new HashMap<>();
+    private HashMap<String, Set<User>> userClusters = new HashMap<>();
 
     public HashMapDB() {
 //        BotBuilder botBuilder = new BotBuilder();
@@ -90,12 +90,12 @@ public class HashMapDB {
     public void add(User user) {
         usersHashMap.put(user.getId().toString(), user);
         String clusterName = Cluster.calcName(user.getLat(), user.getLon());
-        List<User> usersList = userClusters.get(clusterName);
-        if (usersList == null) {
-            usersList = new ArrayList<>();
-            userClusters.put(clusterName, usersList);
+        Set<User> userCluster = userClusters.get(clusterName);
+        if (userCluster == null) {
+            userCluster = new HashSet<>();
+            userClusters.put(clusterName, userCluster);
         }
-        usersList.add(user);
+        userCluster.add(user);
     }
 
     public User[] getFromCluster(int neLat, int neLon, int swLat, int swLon) {
@@ -110,7 +110,7 @@ public class HashMapDB {
         List<String> clusterNames = Cluster.getNames(neLat, neLon, swLat, swLon);
         List<User> usersFromClusters = new ArrayList<>();
         for (String clusterName : clusterNames) {
-            List<User> userCluster = userClusters.get(clusterName);
+            Set<User> userCluster = userClusters.get(clusterName);
             if (userCluster != null) {
                 usersFromClusters.addAll(userCluster);
             }
@@ -126,9 +126,9 @@ public class HashMapDB {
     public void activateUser(Long uId){
         User userToActive = usersHashMap.get(uId.toString());
         String clusterName = Cluster.calcName(userToActive.getLat(), userToActive.getLon());
-        List<User> usersList = userClusters.get(clusterName);
+        Set<User> usersList = userClusters.get(clusterName);
         if (usersList == null) {
-            usersList = new ArrayList<>();
+            usersList = new HashSet<>();
             userClusters.put(clusterName, usersList);
         }
         usersList.add(userToActive);
@@ -136,7 +136,7 @@ public class HashMapDB {
 
     public void deactiveUser(Long uId){
         User userToRemove = usersHashMap.get(uId.toString());
-        List<User> usersList = userClusters.get(Cluster.calcName(userToRemove.getLat(), userToRemove.getLon()));
+        Set<User> usersList = userClusters.get(Cluster.calcName(userToRemove.getLat(), userToRemove.getLon()));
         if (usersList == null) {
             LOG.warn("There is no cluster '" + Cluster.calcName(userToRemove.getLat(), userToRemove.getLon()) + "' for user to delete with id=" + uId);
             return;
@@ -156,7 +156,7 @@ public class HashMapDB {
             LOG.warn("User to delete with id=" + uId + " is missing!");
             return;
         }
-        List<User> usersList = userClusters.get(Cluster.calcName(userToDelete.getLat(), userToDelete.getLon()));
+        Set<User> usersList = userClusters.get(Cluster.calcName(userToDelete.getLat(), userToDelete.getLon()));
         if (usersList == null) {
             LOG.warn("There is no cluster '" + Cluster.calcName(userToDelete.getLat(), userToDelete.getLon()) + "' for user to delete with id=" + uId);
             return;
@@ -174,7 +174,7 @@ public class HashMapDB {
         return usersHashMap;
     }
 
-    public HashMap<String, List<User>> getUserClusters() {
+    public HashMap<String, Set<User>> getUserClusters() {
         return userClusters;
     }
 }

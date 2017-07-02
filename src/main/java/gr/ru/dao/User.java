@@ -1,50 +1,63 @@
 package gr.ru.dao;
 
+import com.google.gson.annotations.Expose;
 import gr.ru.gutil;
 import io.netty.channel.Channel;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Set;
 
 import static gr.ru.gutil.MSG_ONSERVER;
 
 
 @Entity
-public class User extends MainEntity {
+public class User extends MainEntity implements Serializable {
 
     private static final long serialVersionUID = 5942047551885659834L;
     @Transient
     private Channel mapChanel;
     @Transient
+    @Expose
     private boolean cluster = false;
     @Transient
+    @Expose
     private Long lastPresist = 0L;            // время сохранения данных в МУСКЛ
     @Transient
+    @Expose
     public boolean bot = false;
 
 
     @Column
     private Long lastGeoDecode = 0L;            // время обновления ГЕКОДЕРА (и сохранения в МУСКЛ)
     @Column
+    @Expose
     private Integer status = gutil.STATUS_OFFLINE;
     @Column(unique = true)
+    @Expose
     private Long hashkey;        // Идентификатор юзера (отпечаток уникальных данных устройства юзера, известен только серверу)
     @Column
+    @Expose
     private String name;        // логин
     @Column
+    @Expose
     private String country;        // Страна
     @Column
+    @Expose
     private String city;        // Город
     @Column
-    private String locale;        // логин
+    @Expose
+    private String locale;
     @Column
     private Integer lat;        // Координаты
     @Column
     private Integer lon;
     @Column
+    @Expose
     private Short qad;       // Номер таблицы (Квадрат)
     @Column
     private Byte icon = 0;
@@ -236,7 +249,27 @@ public class User extends MainEntity {
                 + ", country=" + country + ", city=" + city + ", lat=" + lat + ", lon=" + lon + ", qad=" + qad
                 + ", icon=" + icon + " getId()=" + getId() + ", getObjVersion()=" + getObjVersion() + "]";
     }
-    
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return Objects.equals(hashkey, user.hashkey) &&
+                Objects.equals(id, user.id) &&
+                Objects.equals(name, user.name) &&
+                Objects.equals(country, user.country) &&
+                Objects.equals(city, user.city);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(hashkey, id, name, country, city);
+    }
+
+
+
 }
 
 
