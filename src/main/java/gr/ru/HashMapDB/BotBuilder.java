@@ -18,6 +18,15 @@ class BotBuilder {
     private Integer lat = 0;        // Координаты
     private Integer lon = 0;
     private Integer status = gutil.STATUS_HIDE;
+    long id=0;
+
+
+
+
+    public BotBuilder setId(long id) {
+        this.id = id;
+        return this;
+    }
 
     public BotBuilder setName(String name) {
         this.name = name;
@@ -58,8 +67,7 @@ class BotBuilder {
 
     public User build() {
         User bot = new User();
-        long id = new Random().nextLong();
-        bot.setId(id < 0 ? id * -1 : id);
+        bot.setId(id);
         bot.setHashkey( new Random().nextLong());
         bot.setName(name);
         bot.setCountry(country);

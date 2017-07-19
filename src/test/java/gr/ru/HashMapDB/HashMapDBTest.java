@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -16,6 +17,10 @@ import static gr.ru.gutil.SETUP_POINTS_IN_VIEW;
  * Created by
  */
 public class HashMapDBTest {
+
+
+
+
     private HashMapDB hashMapDB = new HashMapDB();
 
     private HashMap<String, User> mockUsersHashMap = new HashMap<>();
@@ -26,8 +31,9 @@ public class HashMapDBTest {
         BotBuilder botBuilder = new BotBuilder();
 
         User bot;
-        for (int i=0; i<100000; i++) {
+        for (int i=0; i<100; i++) {
             bot = botBuilder.setCountry(UUID.randomUUID().toString())
+                    .setId(new Random().nextLong())
                     .setCity(UUID.randomUUID().toString())
                     .setLat(ThreadLocalRandom.current().nextInt(-90000000, 90000000))
                     .setLon(ThreadLocalRandom.current().nextInt(-180000000, 180000000))
@@ -35,7 +41,7 @@ public class HashMapDBTest {
                     .build();
             hashMapDB.add(bot);
         }
-//        hashMapDB.add(botBuilder.setCountry("China").setCity("bejin").setLat(45261479).setLon(127754462).setName("bot1-Ch").build());
+        hashMapDB.add(botBuilder.setId(11111).setCountry("China").setCity("bejin").setLat(45261479).setLon(127754462).setName("bot1-Ch").build());
 //        hashMapDB.add(botBuilder.setCountry("Shri-Lanka").setCity("Bangalor").setLat(12942364).setLon(7767026).setName("bot1-Srialn").build());
 //        hashMapDB.add(botBuilder.setCountry("India").setCity("XZZ").setLat(28.6682049).setLon(77.2119786).setName("bot-Eg").build());
 //        hashMapDB.add(botBuilder.setCountry("JUAR").setCity("Keiptaun").setLat(-27906751).setLon(21498461).setName("bot-juar").build());
@@ -77,6 +83,13 @@ public class HashMapDBTest {
 //        long stop = System.currentTimeMillis();
 //        System.out.println("getAllUsers random= " + (stop-start));
 
+    }
+
+
+    @Test
+    public void addAndremove() throws Exception {
+        hashMapDB.removeUser(11111L);
+        System.out.println("");
     }
 
 

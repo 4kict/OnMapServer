@@ -11,9 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 
-import static gr.ru.gutil.SETUP_CLUSTERS_IN_VIEW;
-import static gr.ru.gutil.SETUP_POINTS_IN_VIEW;
-import static gr.ru.gutil.STATUS_ACTIVE;
+import static gr.ru.gutil.*;
 import static java.lang.String.format;
 
 
@@ -74,7 +72,7 @@ public class HashMapDB {
         List<User> visibleUsers = Lists.newArrayList(Iterables.filter(usersHashMap.values(), new Predicate<User>() {
             @Override
             public boolean apply(User input) {
-                return input.getStatus()==STATUS_ACTIVE;
+                return input.getStatus() == STATUS_ACTIVE;
             }
         }));
 
@@ -123,7 +121,7 @@ public class HashMapDB {
         return usersFromClusters.toArray(new User[usersFromClusters.size()]);
     }
 
-    public void activateUser(Long uId){
+    public void activateUser(Long uId) {
         User userToActive = usersHashMap.get(uId.toString());
         String clusterName = Cluster.calcName(userToActive.getLat(), userToActive.getLon());
         Set<User> usersList = userClusters.get(clusterName);
@@ -134,7 +132,7 @@ public class HashMapDB {
         usersList.add(userToActive);
     }
 
-    public void deactiveUser(Long uId){
+    public void deactiveUser(Long uId) {
         User userToRemove = usersHashMap.get(uId.toString());
         Set<User> usersList = userClusters.get(Cluster.calcName(userToRemove.getLat(), userToRemove.getLon()));
         if (usersList == null) {
@@ -161,9 +159,18 @@ public class HashMapDB {
             LOG.warn("There is no cluster '" + Cluster.calcName(userToDelete.getLat(), userToDelete.getLon()) + "' for user to delete with id=" + uId);
             return;
         }
-        if (!usersList.remove(userToDelete)) {
-            LOG.warn("There is no user to delete with id=" + uId + " in user cluster '" + Cluster.calcName(userToDelete.getLat(), userToDelete.getLon()) + "'");
+
+        Iterator<User> iterator = usersList.iterator();
+        while (iterator.hasNext()) {
+            User user = iterator.next();
+            if (user.equals(userToDelete)) {
+                iterator.remove();
+                return;
+            }
         }
+
+        LOG.warn("There is no user to delete with id=" + uId + " in user cluster '" + Cluster.calcName(userToDelete.getLat(), userToDelete.getLon()) + "'");
+
     }
 
     public int size() {

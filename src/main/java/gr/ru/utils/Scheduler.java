@@ -38,7 +38,7 @@ public class Scheduler {
         clusterPath = path + "usersClusters.json";
     }
 
-    @Scheduled(fixedDelay = 2000)
+    @Scheduled(fixedDelay = 5000)
     public void actualHashReplicator() {
         if (isDevelopMode) {
             try (FileWriter fooWriter = new FileWriter(new File(mapPath), false)) {

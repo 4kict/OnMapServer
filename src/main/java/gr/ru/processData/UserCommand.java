@@ -53,7 +53,7 @@ public class UserCommand implements HandleTelegramm {
             userDao.saveOrUpdate(currentUser);
         }
 //        // Статус Пауза перетирает стату Спрятан.
-//        // И серверу не обазательно знать о паузе
+//        // И серверу не обазательно знать о паузе т.к. достаточно знать Спрятан или нет
 //        else if (command.cmd == gutil.STATUS_PAUSE) {
 //            // Юзер в паузе  // НЕ используется
 //            currentUser.setStatus(gutil.STATUS_PAUSE);
