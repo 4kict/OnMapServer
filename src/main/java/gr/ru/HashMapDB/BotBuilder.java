@@ -17,7 +17,7 @@ class BotBuilder {
     private String lang = "en";        // язык
     private Integer lat = 0;        // Координаты
     private Integer lon = 0;
-    private Integer status = gutil.STATUS_HIDE;
+    private Integer status = gutil.STATUS_ACTIVE;
     long id=0;
 
 

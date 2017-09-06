@@ -245,6 +245,8 @@ public final class Packs2Client {
                 for (int i = 0; i < pointsLen; i++) {
                     points[i] = (MapPoint) PacketFactory.produceFromBuf(PacketFactory.MAP_POINT, buffer);
                 }
+            }else {
+                points = new MapPoint[0];
             }
         }
 
@@ -259,14 +261,14 @@ public final class Packs2Client {
 
         @Override
         public int getLength() {
-            if (points.length > 0)
-                return (Short.SIZE / Byte.SIZE) + (points.length * points[0].getLength());
-            else return 0;
+            int pointsSize = (points == null || points.length == 0) ? 0 : points.length * points[0].getLength();
+            return (Short.SIZE / Byte.SIZE) + pointsSize;
         }
 
         @Override
         public String toString() {
-            return "PointArray [points=" + points.length + ", getLength()=" + getLength() + ", getId()=" + getId()
+            int pointsSize = (points == null || points.length == 0) ? 0 : points.length * points[0].getLength();
+            return "PointArray [points=" + pointsSize + ", getLength()=" + getLength() + ", getId()=" + getId()
                     + "]";
         }
     }

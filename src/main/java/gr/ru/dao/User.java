@@ -256,16 +256,12 @@ public class User extends MainEntity implements Serializable {
         if (this == o) return true;
         if (!(o instanceof User)) return false;
         User user = (User) o;
-        return Objects.equals(hashkey, user.hashkey) &&
-                Objects.equals(id, user.id) &&
-                Objects.equals(name, user.name) &&
-                Objects.equals(country, user.country) &&
-                Objects.equals(city, user.city);
+        return Objects.equals(id, user.id)  ;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(hashkey, id, name, country, city);
+        return Objects.hash(id);
     }
 
 

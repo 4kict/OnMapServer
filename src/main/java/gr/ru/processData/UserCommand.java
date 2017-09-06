@@ -63,7 +63,7 @@ public class UserCommand implements HandleTelegramm {
         else if (command.cmd == gutil.STATUS_HIDE) {
             // Юзер желает скрыться с карты
             currentUser.setStatus(gutil.STATUS_HIDE);
-            hashMapDB.deactiveUser(currentUser.getId());
+            hashMapDB.hideUser(currentUser.getId());
             LOG.debug("STATUS_HIDE:");
             userDao.saveOrUpdate(currentUser);
         } else if (command.cmd == MSG_DELIVERED) {

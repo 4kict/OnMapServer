@@ -50,8 +50,8 @@ public class RequestInfo implements HandleTelegramm {
             userInfo.lon = user.getLon();
             userInfo.stat = user.getStatus();
             // TODO: Гугл может не определить локацию, тогда клиент получит НУЛ (так ли?) и андройд выдаст ошибку.
-            userInfo.country = user.getCountry();
-            userInfo.local = user.getCity();
+            userInfo.country = user.getCountry() == null ? "" : user.getCountry();
+            userInfo.local = user.getCity() == null ? "" : user.getCity();
             userInfo.language = user.getLocale();
             LOG.trace("UserInfo to Send =" + userInfo);
             ctxChanel.writeAndFlush(userInfo);

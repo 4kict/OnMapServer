@@ -19,29 +19,25 @@ import static gr.ru.gutil.SETUP_POINTS_IN_VIEW;
 public class HashMapDBTest {
 
 
-
-
     private HashMapDB hashMapDB = new HashMapDB();
 
-    private HashMap<String, User> mockUsersHashMap = new HashMap<>();
-    private HashMap<String, List<User>> mockUserClusters = new HashMap<>();
 
     @Before
     public void init() {
-        BotBuilder botBuilder = new BotBuilder();
-
-        User bot;
-        for (int i=0; i<100; i++) {
-            bot = botBuilder.setCountry(UUID.randomUUID().toString())
-                    .setId(new Random().nextLong())
-                    .setCity(UUID.randomUUID().toString())
-                    .setLat(ThreadLocalRandom.current().nextInt(-90000000, 90000000))
-                    .setLon(ThreadLocalRandom.current().nextInt(-180000000, 180000000))
-                    .setName(UUID.randomUUID().toString())
-                    .build();
-            hashMapDB.add(bot);
-        }
-        hashMapDB.add(botBuilder.setId(11111).setCountry("China").setCity("bejin").setLat(45261479).setLon(127754462).setName("bot1-Ch").build());
+//        BotBuilder botBuilder = new BotBuilder();
+//
+//        User bot;
+//        for (int i = 0; i < 100; i++) {
+//            bot = botBuilder.setCountry(UUID.randomUUID().toString())
+//                    .setId(new Random().nextLong())
+//                    .setCity(UUID.randomUUID().toString())
+//                    .setLat(ThreadLocalRandom.current().nextInt(-90000000, 90000000))
+//                    .setLon(ThreadLocalRandom.current().nextInt(-180000000, 180000000))
+//                    .setName(UUID.randomUUID().toString())
+//                    .build();
+//            hashMapDB.add(bot);
+//        }
+//        hashMapDB.add(botBuilder.setId(11111).setCountry("China").setCity("bejin").setLat(45261479).setLon(127754462).setName("bot1-Ch").build());
 //        hashMapDB.add(botBuilder.setCountry("Shri-Lanka").setCity("Bangalor").setLat(12942364).setLon(7767026).setName("bot1-Srialn").build());
 //        hashMapDB.add(botBuilder.setCountry("India").setCity("XZZ").setLat(28.6682049).setLon(77.2119786).setName("bot-Eg").build());
 //        hashMapDB.add(botBuilder.setCountry("JUAR").setCity("Keiptaun").setLat(-27906751).setLon(21498461).setName("bot-juar").build());
@@ -66,12 +62,12 @@ public class HashMapDBTest {
         User[] clusters = hashMapDB.getFromCluster(8, 10, 3, 4);
         Assert.assertEquals(SETUP_POINTS_IN_VIEW, clusters.length);
         clusters = hashMapDB.getFromCluster(14, 37, 11, 33);
-        Assert.assertTrue(clusters.length>1 && clusters.length<=SETUP_POINTS_IN_VIEW);
+        Assert.assertTrue(clusters.length > 1 && clusters.length <= SETUP_POINTS_IN_VIEW);
 
     }
 
     @Test
-    public void getAllActive(){
+    public void getAllActive() {
         User[] usters = hashMapDB.getFromCluster(8, 10, 11, 33);
         System.out.println("");
     }
@@ -92,5 +88,19 @@ public class HashMapDBTest {
         System.out.println("");
     }
 
+    @Test
+    public void baseTest() throws Exception {
+        User user1 = new BotBuilder().setId(11111).setCountry("China").setCity("bejin").setLat(45261479).setLon(127754462).setName("bot1-Ch").build() ;
 
+        hashMapDB.add(user1);
+        User user2 = new BotBuilder().setId(11111).setCountry("China2").setCity("bejin2").setLat(45261479).setLon(127754462).setName("bot1-Ch1").build() ;
+        hashMapDB.add(user2);
+        System.out.println("asd");
+
+    }
+
+    @Test
+    public void baseTest2() throws Exception {
+
+    }
 }

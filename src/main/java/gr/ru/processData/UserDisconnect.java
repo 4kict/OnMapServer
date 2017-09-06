@@ -29,9 +29,8 @@ public class UserDisconnect implements HandleTelegramm {
             userToDelete.setStatus(gutil.STATUS_OFFLINE);
 
             LOG.debug("userToDelete=" + userToDelete);
-
-            userDao.saveOrUpdate(userToDelete);                            // Если нашли, сохраняем его последние данные в МУСКЛ, предварительно сделав его ОФФЛАЙН
             hashMapDB.removeUser(userToDelete.getId());                    // Удаляем из Хэша
+            userDao.saveOrUpdate(userToDelete);                            // Если нашли, сохраняем его последние данные в МУСКЛ, предварительно сделав его ОФФЛАЙН
         }
     }
 

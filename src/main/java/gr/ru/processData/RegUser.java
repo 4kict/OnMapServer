@@ -25,6 +25,8 @@ import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
 
+import static gr.ru.gutil.STATUS_HIDE;
+
 @Component
 public class RegUser implements HandleTelegramm {
     private static final Logger LOG = LogManager.getLogger(RegUser.class);
@@ -67,6 +69,7 @@ public class RegUser implements HandleTelegramm {
             LOG.trace("PreReg new User " + regData.name);
             if (user != null) {
                 user.setChanel(ctxChanel.channel());                    // Сохраняем ссылку на Канал в Юзере
+                user.setStatus(STATUS_HIDE);
                 userDao.saveOrUpdate(user);                        // Сохраняем Юзера в МУСКЛ
                 hashMapDB.add(user);                                    // Сохраняем Юзера в Оперативной базе
                 registrationAccept(ctxChanel, user);

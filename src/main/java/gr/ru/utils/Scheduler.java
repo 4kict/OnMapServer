@@ -48,7 +48,7 @@ public class Scheduler {
                 LOG.warn("cant save usersMap to:" + mapPath);
             }
             try (FileWriter fooWriter = new FileWriter(new File(clusterPath), false)) {
-                fooWriter.write(GSON.toJson(hashMapDB.getUserClusters()));
+                fooWriter.write(GSON.toJson(hashMapDB.getClustersCollector()));
                 fooWriter.close();
             } catch (IOException e) {
                 LOG.warn("cant save usersClusters to:" + clusterPath);
